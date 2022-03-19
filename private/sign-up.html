@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home Page</title>
+</head>
+<body>
+  <h1>Home Page, Hello There</h1>
+  <h3>
+    <ul>
+      <li><a href="./index.html">Home</a></li>
+      <li><a href="./sign-in.html">Sign In</a></li>
+      <li><a href="./sign-up.html">Sign Up</a></li>
+    </ul>
+  </h3>
+
+  <form action="/logout" method="post">
+    <button>Logout</button>
+  </form>
+
+  <h4>Sign Up:</h4>
+
+  <form action="/api/owner" method="post">
+    <label for="name">Name:</label><br>
+    <input type="text" name="name"><br>
+
+    <label for="password">Password:</label><br>
+    <input type="password" name="password"><br>
+
+    <label for="nationality">Nationality:</label><br>
+    <input type="text" name="nationality"><br>
+
+    <label for="nationalID">National ID:</label><br>
+    <input type="text" name="national_id"><br>
+
+    <label for="gender">Gender:</label><br>
+    <input type="text" name="gender"><br>
+
+    <label for="religion">Religion:</label><br>
+    <input type="text" name="religion"><br>
+
+    <label for="phone">Phone:</label><br>
+    <input type="text" name="phone"><br>
+
+    <label for="address">Address:</label><br>
+    <input type="text" name="address"><br>
+
+    <label for="email">Email:</label><br>
+    <input type="text" name="email"><br><br>
+
+    <input type="submit" value="Submit">
+  </form>
+
+
+</body>
+</html>
