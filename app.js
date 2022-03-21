@@ -192,13 +192,12 @@ app.listen(5000, () => {
  * Hardware:
  * ---------
  * - Authenticate with server (save session id?)
- * - Read QR code
  * - Send text to server
- * - read response from server, if confirmed then open gate
+ * - read response from server, if confirmed then open gate, and save image from camera 2?
  * - if gate opened, take screenshot from camera 2 and send to server.
  * Database:
  * ---------
- * - array of objects id in owner's database
+ * - 
  * Deployment:
  * -----------
  * - deploy
