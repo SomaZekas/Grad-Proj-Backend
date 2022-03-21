@@ -22,6 +22,7 @@ mongoose.connect('mongodb://localhost:27017/test').then(()=> {
 const Owner = require('./models/Owner')
 const Guest = require('./models/Guest')
 const Employee = require('./models/Employee')
+const Admin = require('./models/Admin')
 
 
 const regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -55,7 +56,7 @@ app.post('/sign-in', async (req, res) => {
         const isValidEmployee = await Employee.findOne({email});
         if (sha256(password) == isValidEmployee.password) {
             req.session.employee_id = isValidEmployee._id;
-            return res.redirect('/');
+            return res.status(200).redirect('/');
             // return res.status(200).json({
             //     'confirmation': 'success',
             //     'name': isValidEmployee.name.charAt(0).toUpperCase() + isValidEmployee.name.slice(1)
@@ -77,7 +78,7 @@ app.post('/sign-in', async (req, res) => {
 })
 
 app.get('/sign-up.html', (req, res) => {
-    console.log('sign in');
+    //console.log('sign in');
     if (!req.session.employee_id) {
         res.redirect('/sign-in.html');
     } else {
@@ -150,10 +151,10 @@ app.post('/owners/newguest', async (req, res) => {
 })
 
 //Hardware
-// app.post('/gate/image', (req, res) => {
-//     console.log(req.body);
-//     res.send('Thank you')
-// })
+app.post('/gate/image', (req, res) => {
+    console.log(req.body);
+    res.send('Thank you')
+})
 
 app.listen(5000, () => {
     console.log('Server is listening on port 5000...');
@@ -187,6 +188,7 @@ app.listen(5000, () => {
  * - Hashing passwords (WEB)
  * - When adding a new admin, employee, and owner, make sure the email isn't already registered (WEB)
  * - Associate employees with created owners (WEB)
+ * - A signed in user can sign in again (WEB)
  * Hardware:
  * ---------
  * - Authenticate with server (save session id?)
