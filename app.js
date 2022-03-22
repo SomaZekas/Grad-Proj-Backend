@@ -8,6 +8,7 @@ const app = express();
 //const multer = require('multer')
 //const upload = multer()
 const sha256 = require('js-sha256').sha256;
+const NodeRSA = require('node-rsa');
 const session = require('express-session');
 const path = require('path');
 
@@ -24,6 +25,26 @@ const Guest = require('./models/Guest')
 const Employee = require('./models/Employee')
 const Admin = require('./models/Admin')
 
+
+const keyRSA = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
+    'MIICXgIBAAKBgQCtSsoZiarOq3hvzuRH1NdNEMb0URX99eMFS0U2sGJeTSLffG7t\n' +
+    'tpSmhtDAcIosz5CkiCeVSbjp77yB+8BGNzFXmX3Q1x6vk3bwELKffvrMv4e2xE52\n' +
+    '/Bd7wZ6ibXJN/lVwN+P0yogfLotxYaGTNa1JpVrQkCZp18Dl7V6ZM5EliwIDAQAB\n' +
+    'AoGBAIDHpp8J1pyVgwAcETtsab/EqwWfSKedVmN1x27X75JC4pqQv2L6n0eNwo5w\n' +
+    'U87vRX9wC3J/AeMfnMhADWhg1dIV4AKykb3sGphymvkCWgSQBPqyOAPTaODpF0Tb\n' +
+    'JsnvqlddCmqOYXyrm155U90DX9N8MABsgMhT959iMV8SUBkhAkEA9b9C1YJojnHd\n' +
+    'gJKdqs6JjwLJnT6H1FLlHep9G2ei+VeEZBg87UNgyFUjxB1L8/0USESN0uNWRlqp\n' +
+    '9cvD0XREMQJBALSFqYfe/7qCIkn3YKmDIRzHX5ZotV1jtlSFZr56Dg1PrE1ltzKl\n' +
+    'rls8lYdtgYxbCQlol8t+wK6RLUFqgrvsAnsCQQDHfYCytA9Oew6Vve9x5gHy7w9d\n' +
+    'r5IyASzvERiIM6QwByR44NgsvwKE/eBv5lxu72YUmFoM9PFnYVgRKV2H3XsxAkBC\n' +
+    'wWbGut0gcD0T0ynopXgaN1QOv9vJlDT5nnc3GtWVcJAL8wBC92e5j3bQJNuSNpvp\n' +
+    '4ca4VsAUDdWJakS8D3N/AkEAyyutx6fn7EkfV02nRjSQ63McASZnSRE7mMXkOTRY\n' +
+    'h7g44MSBTBZeOEFhl3UQz7F13QW6V9GqZMq6Q5/Rg8YKyA==\n' +
+    '-----END RSA PRIVATE KEY-----');
+
+//console.log(keyRSA.getKeySize());
+//console.log(keyRSA.getMaxMessageSize());
+console.log(keyRSA.exportKey());
 
 const regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
@@ -154,6 +175,10 @@ app.post('/owners/newguest', async (req, res) => {
 app.post('/gate/image', (req, res) => {
     console.log(req.body);
     res.send('Thank you')
+    const {data} = req.body;
+    console.log(data);
+    const decryptedHash = keyRSA.decrypt(data);
+    console.log(decryptedHash);
 })
 
 app.listen(5000, () => {
