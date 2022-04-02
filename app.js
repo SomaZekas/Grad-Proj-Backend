@@ -5,12 +5,36 @@
 const express = require('express');
 const app = express();
 //const bodyParser = require('body-parser')
-//const multer = require('multer')
-//const upload = multer()
+const multer = require('multer')
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+
+// dotenv file
+const CLOUNDINARY_CLOUD_NAME = 'dodmtp0m2';
+const CLOUDINARY_KEY = '872594197768919';
+const CLOUDINARY_SECRET = 'caLYZKrjQcANYesu0IPYCt4vJJQ';
+//put in module
+cloudinary.config({
+    cloud_name: CLOUNDINARY_CLOUD_NAME,
+    api_key: CLOUDINARY_KEY,
+    api_secret: CLOUDINARY_SECRET
+});
+
+const storage = new CloudinaryStorage({
+    cloudinary,
+    folder: 'test',
+    allowedFormats: ['jepg', 'png', 'jpg']
+});
+
+const upload = multer({storage})
+//const upload = multer({dest: './uploads/'})
+
 const sha256 = require('js-sha256').sha256;
 const NodeRSA = require('node-rsa');
 const session = require('express-session');
 const path = require('path');
+const fs = require('fs');
+
 
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/test').then(()=> {
@@ -26,25 +50,41 @@ const Employee = require('./models/Employee')
 const Admin = require('./models/Admin')
 
 
-const keyRSA = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
-    'MIICXgIBAAKBgQCtSsoZiarOq3hvzuRH1NdNEMb0URX99eMFS0U2sGJeTSLffG7t\n' +
-    'tpSmhtDAcIosz5CkiCeVSbjp77yB+8BGNzFXmX3Q1x6vk3bwELKffvrMv4e2xE52\n' +
-    '/Bd7wZ6ibXJN/lVwN+P0yogfLotxYaGTNa1JpVrQkCZp18Dl7V6ZM5EliwIDAQAB\n' +
-    'AoGBAIDHpp8J1pyVgwAcETtsab/EqwWfSKedVmN1x27X75JC4pqQv2L6n0eNwo5w\n' +
-    'U87vRX9wC3J/AeMfnMhADWhg1dIV4AKykb3sGphymvkCWgSQBPqyOAPTaODpF0Tb\n' +
-    'JsnvqlddCmqOYXyrm155U90DX9N8MABsgMhT959iMV8SUBkhAkEA9b9C1YJojnHd\n' +
-    'gJKdqs6JjwLJnT6H1FLlHep9G2ei+VeEZBg87UNgyFUjxB1L8/0USESN0uNWRlqp\n' +
-    '9cvD0XREMQJBALSFqYfe/7qCIkn3YKmDIRzHX5ZotV1jtlSFZr56Dg1PrE1ltzKl\n' +
-    'rls8lYdtgYxbCQlol8t+wK6RLUFqgrvsAnsCQQDHfYCytA9Oew6Vve9x5gHy7w9d\n' +
-    'r5IyASzvERiIM6QwByR44NgsvwKE/eBv5lxu72YUmFoM9PFnYVgRKV2H3XsxAkBC\n' +
-    'wWbGut0gcD0T0ynopXgaN1QOv9vJlDT5nnc3GtWVcJAL8wBC92e5j3bQJNuSNpvp\n' +
-    '4ca4VsAUDdWJakS8D3N/AkEAyyutx6fn7EkfV02nRjSQ63McASZnSRE7mMXkOTRY\n' +
-    'h7g44MSBTBZeOEFhl3UQz7F13QW6V9GqZMq6Q5/Rg8YKyA==\n' +
-    '-----END RSA PRIVATE KEY-----');
+// let keyRSA;
+// let privateKey;
+// let publicKey;
 
+// if (fs.statSync('./keys/private.pem').size == 0) {
+    
+//     keyRSA = new NodeRSA({b: 1024}).generateKeyPair();
+//     keyRSA.setOptions({encryptionScheme: 'pkcs1'});
+    
+//     privateKey = keyRSA.exportKey('private');
+//     publicKey = keyRSA.exportKey('public');
+    
+//     fs.openSync('./keys/private.pem', 'w');
+//     fs.writeFileSync('./keys/private.pem', privateKey, 'utf-8');
+    
+//     fs.openSync('./keys/public.pem', 'w');
+//     fs.writeFileSync('./keys/public.pem', publicKey, 'utf-8');
+// } else {
+//     privateKey = fs.readFileSync('./keys/private.pem', 'utf-8');
+//     publicKey = fs.readFileSync('./keys/public.pem', 'utf-8');
+//     keyRSA.importKey(privateKey, 'private')
+//     keyRSA.importKey(publicKey, 'public')
+// }
+
+const keyRSA = new NodeRSA();
+keyRSA.setOptions({encryptionScheme: 'pkcs1'});
+keyRSA.importKey(fs.readFileSync('./keys/private.pem', 'utf-8'), 'private');
+keyRSA.importKey(fs.readFileSync('./keys/public.pem', 'utf-8'), 'public');
+
+// keyRSA.importKey(privKey, 'private')
+// keyRSA.importKey(pubKey, 'public')
 //console.log(keyRSA.getKeySize());
 //console.log(keyRSA.getMaxMessageSize());
-console.log(keyRSA.exportKey());
+// console.log(keyRSA.exportKey('private'));
+// console.log(keyRSA.exportKey('public'));
 
 const regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
@@ -75,7 +115,7 @@ app.post('/sign-in', async (req, res) => {
     const {email, password} = req.body;
     if (email.match(regexEmail) && email.length > 5 && password.length >= 3) {
         const isValidEmployee = await Employee.findOne({email});
-        if (sha256(password) == isValidEmployee.password) {
+        if (isValidEmployee && sha256(password) == isValidEmployee.password) {
             req.session.employee_id = isValidEmployee._id;
             return res.status(200).redirect('/');
             // return res.status(200).json({
@@ -172,13 +212,31 @@ app.post('/owners/newguest', async (req, res) => {
 })
 
 //Hardware
-app.post('/gate/image', (req, res) => {
+app.post('/gate/image', async (req, res) => {
     console.log(req.body);
-    res.send('Thank you')
+    //res.send('Thank you')
     const {data} = req.body;
-    console.log(data);
-    const decryptedHash = keyRSA.decrypt(data);
+    //console.log(data);
+    const decryptedHash = keyRSA.decrypt(data, 'utf-8');
     console.log(decryptedHash);
+    const qrValid = await Guest.findOne({hashed: decryptedHash, used: false});
+    if (qrValid) {
+        await qrValid.updateOne({used: true});
+        console.log(qrValid);
+        return res.send('Confirmed');
+    } else {    
+        return res.send('Failed');
+        //console.log(qrValid);
+    }
+    
+})
+
+app.post('/ay', upload.single('file'), (req, res) => {
+    console.log(req.file);
+    res.send('Done');
+    //Saves images in cloudinary
+    //how will link it to guest?
+    //how to timestamp? in picture? or in image's name? if so then how?
 })
 
 app.listen(5000, () => {
@@ -205,11 +263,9 @@ app.listen(5000, () => {
  * Server:
  * -------
  * - Logging every action (ALL)
- * - Authenticate QR Code data (HARDWARE)
- * - Send confirmation to selected gate (HARDWARE)
  * - server saves the image from gate with timestamp (HARDWARE)
- * - Selected image will be added in the selected owner's database (HARDWARE)
- * - Delete scanned guest data? (HARDWARE)
+ * - Selected image will be added in the selected guest's database (HARDWARE)
+ * - Authenticate hardware (HARDWARE)
  * - Hashing passwords (WEB)
  * - When adding a new admin, employee, and owner, make sure the email isn't already registered (WEB)
  * - Associate employees with created owners (WEB)
