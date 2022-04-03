@@ -23,8 +23,11 @@ cloudinary.config({
 
 const storage = new CloudinaryStorage({
     cloudinary,
-    folder: 'test',
-    allowedFormats: ['jepg', 'png', 'jpg']
+    params: {
+        folder: 'test',
+        allowedFormats: ['jepg', 'png', 'jpg']
+
+    }
 });
 
 const upload = multer({storage})

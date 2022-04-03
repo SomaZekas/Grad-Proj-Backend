@@ -1,3 +1,4 @@
+const { links } = require('express/lib/response');
 const mongoose = require('mongoose');
 
 const Guest = new mongoose.Schema({
@@ -6,7 +7,12 @@ const Guest = new mongoose.Schema({
     car_id: {type: String, trim: true, default:''},
     used: {type: Boolean, trim: true, default:''},
     hashed: {type: String, trim: true, default:''},
-    owner_id: {type: mongoose.Types.ObjectId, trim: true}
+    owner_id: {type: mongoose.Types.ObjectId, trim: true, default: ''},
+    entrance_img: {
+        url: {type: String, trim: true, default: ''},
+        filename: {type: String, trim: true, default: ''},
+        dateUploaded: {type: String, trim: true, default: ''}
+    }
 
 });
 
