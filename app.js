@@ -123,6 +123,7 @@ app.post('/sign-in', async (req, res) => {
     const {email, password} = req.body;
     if (email.match(regexEmail) && email.length > 5 && password.length >= 3) {
         const isValidEmployee = await Employee.findOne({email});
+        const isValidAdmin = await Admin.findOne({email});
         if (isValidEmployee && sha256(password) == isValidEmployee.password) {
             req.session.employee_id = isValidEmployee._id;
             return res.status(200).redirect('/');
@@ -130,6 +131,9 @@ app.post('/sign-in', async (req, res) => {
             //     'confirmation': 'success',
             //     'name': isValidEmployee.name.charAt(0).toUpperCase() + isValidEmployee.name.slice(1)
             // });
+        } else if (isValidAdmin && sha256(password) == isValidAdmin.password) {
+            req.session.admin_id = isValidAdmin._id;
+            return res.status(200).redirect('/');
         } else {
             return res.status(401).json({
                 'confirmation': 'failure',
@@ -146,12 +150,52 @@ app.post('/sign-in', async (req, res) => {
 
 })
 
+//Double check if found instead of session just existing
 app.get('/sign-up.html', (req, res) => {
     //console.log('sign in');
-    if (!req.session.employee_id) {
+    if (!req.session.employee_id && !req.session.admin_id) {
         res.redirect('/sign-in.html');
     } else {
         res.sendFile(path.resolve(__dirname, './private/sign-up.html'));
+    }
+})
+
+app.get('/logs.html', (req, res) => {
+    //console.log('sign in');
+    if (!req.session.admin_id) {
+        res.send('unauthorized');
+    } else {
+        res.sendFile(path.resolve(__dirname, './private/logs.html'));
+    }
+})
+
+app.get('/secpic', (req, res) => {
+    //console.log('sign in');
+    if (!req.session.admin_id) {
+        res.send('unauthorized');
+    } else {
+        Guest.find().select('entrance_img')
+        .then(guests => {
+            res.json({
+                confirmation: 'success',
+                data: guests
+            })
+        })
+        .catch(err => {
+            res.json({
+                confirmation: 'failure',
+                message: err.message
+            })
+        })
+    }
+})
+
+app.get('/samplelogs', (req, res) => {
+    //console.log('sign in');
+    if (!req.session.admin_id) {
+        res.send('unauthorized');
+    } else {
+        res.sendFile(path.resolve(__dirname, './logs/sample.txt'));
     }
 })
 
@@ -159,6 +203,9 @@ app.post('/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/');
 })
+
+
+
 
 //Login from mobile app
 app.post('/owners', async (req, res) => {
@@ -218,6 +265,9 @@ app.post('/owners/newguest', async (req, res) => {
         
     }
 })
+
+
+
 
 //Hardware
 var qrValid;
