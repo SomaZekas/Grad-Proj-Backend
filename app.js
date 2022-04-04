@@ -25,9 +25,13 @@ const storage = new CloudinaryStorage({
     cloudinary,
     params: {
         folder: 'test',
-        allowedFormats: ['jepg', 'png', 'jpg']
-
-    }
+        allowedFormats: ['jepg', 'png', 'jpg'],
+        use_filename: true,
+        public_id: (req, file) => {
+            const timestamp = Date.now();
+            return timestamp + '_' + file.originalname;
+        }
+    } 
 });
 
 const upload = multer({storage})
@@ -216,31 +220,27 @@ app.post('/owners/newguest', async (req, res) => {
 })
 
 //Hardware
-app.post('/gate/image', async (req, res) => {
-    console.log(req.body);
-    //res.send('Thank you')
+var qrValid;
+app.post('/gate', async (req, res) => {
     const {data} = req.body;
-    //console.log(data);
     const decryptedHash = keyRSA.decrypt(data, 'utf-8');
-    console.log(decryptedHash);
-    const qrValid = await Guest.findOne({hashed: decryptedHash, used: false});
+    qrValid = await Guest.findOne({hashed: decryptedHash, used: false});
     if (qrValid) {
         await qrValid.updateOne({used: true});
-        console.log(qrValid);
         return res.send('Confirmed');
     } else {    
         return res.send('Failed');
-        //console.log(qrValid);
     }
     
 })
 
-app.post('/ay', upload.single('file'), (req, res) => {
-    console.log(req.file);
+app.post('/gate/image', upload.single('file'), async (req, res) => {
+    const {path, filename} = req.file;
+    const uploadTime = new Date().toLocaleString();
+    await qrValid.updateOne({ entrance_img: {url: path, filename: filename, dateUploaded: uploadTime} });
     res.send('Done');
+
     //Saves images in cloudinary
-    //how will link it to guest?
-    //how to timestamp? in picture? or in image's name? if so then how?
 })
 
 app.listen(5000, () => {
@@ -264,6 +264,7 @@ app.listen(5000, () => {
  * - Output in apk (depoloy first), (USB debugging?)
  * - Session id
  * - Save guest data for future use?
+ * - Owner generates his own qr to enter
  * Server:
  * -------
  * - Logging every action (ALL)
@@ -277,7 +278,6 @@ app.listen(5000, () => {
  * Hardware:
  * ---------
  * - Authenticate with server (save session id?)
- * - Send text to server
  * - read response from server, if confirmed then open gate, and save image from camera 2?
  * - if gate opened, take screenshot from camera 2 and send to server.
  * Database:
@@ -295,8 +295,8 @@ app.listen(5000, () => {
  *  - Send data of guest with their hash to server (DONE)
  * - Hardware:
  *  - Sign in server
- *  - Send scanned QR code to server
- *  - If authenticated, opens door, takes images, and send to server
+ *  - Send scanned QR code to server, and take a picture
+ *  - If authenticated, opens door, and send picture to server
  *  ----------------------------------------------------------------------------
  * Deployment sites:
  * -----------------
@@ -305,5 +305,10 @@ app.listen(5000, () => {
  * https://www.heroku.com/home
  * https://www.turbo360.co/
  * https://mlab.com/
+ * ------------------------------------------------------------------------------
+ * Ideas:
+ * ------
+ * - Telegram Bot
+ * - Mobile app for admin
  * 
  */
