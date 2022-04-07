@@ -2,6 +2,8 @@
  * https://www.npmjs.com/package/js-sha256
  * https://www.npmjs.com/package/node-rsa
  * 
+ * https://stackoverflow.com/questions/10849687/express-js-how-to-get-remote-client-address
+ * 
  */
 const express = require('express');
 const app = express();
@@ -52,6 +54,8 @@ mongoose.connect('mongodb://localhost:27017/test').then(()=> {
     console.log(err);
 })
 
+const addLogs = require('./models/Log');
+
 const Owner = require('./models/Owner')
 const Guest = require('./models/Guest')
 const Employee = require('./models/Employee')
@@ -101,6 +105,9 @@ app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 app.use(session({ secret: '^kk#o@OZ332o06^4' }))
 
+//logs server
+addLogs('server-boot', '0', '0', '0');
+
 //Testing
 app.get('/owners', (req, res) => {
     Owner.find()
@@ -124,8 +131,14 @@ app.post('/sign-in', async (req, res) => {
     if (email.match(regexEmail) && email.length > 5 && password.length >= 3) {
         const isValidEmployee = await Employee.findOne({email});
         const isValidAdmin = await Admin.findOne({email});
+        //const ip = req.headers['x-forwaded-for']
+        //const ip = req.socket.remoteAddress;
+        const ip = req.ip
+        //console.log(ip);
         if (isValidEmployee && sha256(password) == isValidEmployee.password) {
             req.session.employee_id = isValidEmployee._id;
+            //logs employee logged in
+            addLogs('web-employee-login', isValidEmployee._id, ip);
             return res.status(200).redirect('/');
             // return res.status(200).json({
             //     'confirmation': 'success',
@@ -133,6 +146,8 @@ app.post('/sign-in', async (req, res) => {
             // });
         } else if (isValidAdmin && sha256(password) == isValidAdmin.password) {
             req.session.admin_id = isValidAdmin._id;
+            //logs admin sign in
+            addLogs('web-admin-login', isValidAdmin._id, '0', ip);
             return res.status(200).redirect('/');
         } else {
             return res.status(401).json({
@@ -166,6 +181,7 @@ app.get('/logs.html', (req, res) => {
         res.send('unauthorized');
     } else {
         res.sendFile(path.resolve(__dirname, './private/logs.html'));
+        //logs of admin
     }
 })
 
@@ -180,6 +196,7 @@ app.get('/secpic', (req, res) => {
                 confirmation: 'success',
                 data: guests
             })
+            //logs of admin viewed records
         })
         .catch(err => {
             res.json({
@@ -200,6 +217,7 @@ app.get('/samplelogs', (req, res) => {
 })
 
 app.post('/logout', (req, res) => {
+    //logs of user logged out
     req.session.destroy();
     res.redirect('/');
 })
@@ -210,12 +228,15 @@ app.post('/logout', (req, res) => {
 //Login from mobile app
 app.post('/owners', async (req, res) => {
     const {from} = req.body;
+    const ip = req.ip
     if (from == 'Mobile') {
         const {email, password} = req.body;
         console.log(email);
         if (email.match(regexEmail) && email.length > 5 && password.length >= 3) {
             const isValidOwner = await Owner.findOne({email});
             if (sha256(password) == isValidOwner.password) {
+                //logs of owner log in (to be tested)
+                addLogs('mobile-owner-login', isValidOwner._id, '0', ip)
                 return res.status(200).json({
                     'confirmation': 'success',
                     'name': isValidOwner.name.charAt(0).toUpperCase() + isValidOwner.name.slice(1)
@@ -259,9 +280,12 @@ app.post('/owners/newguest', async (req, res) => {
             });
         }
 
+        //is this supposed to be inside the try catch?
         const guest_owner = await Owner.findOne({email: ownerEmail});
         await guest_owner.updateOne({ $push: { active_qr: newGuest._id }});
         await newGuest.updateOne({owner_id: guest_owner._id});
+        //logs owner adds guest (to be tested)
+        addLogs('mobile-owner-add-guest', guest_owner._id, newGuest._id, '0')
         
     }
 })
@@ -277,6 +301,9 @@ app.post('/gate', async (req, res) => {
     qrValid = await Guest.findOne({hashed: decryptedHash, used: false});
     if (qrValid) {
         await qrValid.updateOne({used: true});
+        //logs guest entered
+        addLogs('hardware-guest', qrValid._id, qrValid.owner_id, '0')
+        //logs gate opened for guest ----
         return res.send('Confirmed');
     } else {    
         return res.send('Failed');
@@ -285,9 +312,11 @@ app.post('/gate', async (req, res) => {
 })
 
 app.post('/gate/image', upload.single('file'), async (req, res) => {
+    //add a way to verify before adding picture
     const {path, filename} = req.file;
     const uploadTime = new Date().toLocaleString();
     await qrValid.updateOne({ entrance_img: {url: path, filename: filename, dateUploaded: uploadTime} });
+    //logs hardware sent picture
     res.send('Done');
 
     //Saves images in cloudinary
@@ -317,7 +346,7 @@ app.listen(5000, () => {
  * - Owner generates his own qr to enter
  * Server:
  * -------
- * - Logging every action (ALL)
+ * - Logging every action (ALL) (semi-done)
  * - server saves the image from gate with timestamp (HARDWARE)
  * - Selected image will be added in the selected guest's database (HARDWARE)
  * - Authenticate hardware (HARDWARE)

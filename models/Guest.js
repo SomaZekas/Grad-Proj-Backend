@@ -1,4 +1,3 @@
-const { links } = require('express/lib/response');
 const mongoose = require('mongoose');
 
 const Guest = new mongoose.Schema({
