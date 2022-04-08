@@ -49,6 +49,7 @@ const fs = require('fs');
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/test').then(()=> {
     console.log('Connected');
+    //logs connected to server
 }).catch(err => {
     console.log('Error!');
     console.log(err);
@@ -127,7 +128,9 @@ app.get('/owners', (req, res) => {
 
 //Web
 app.post('/sign-in', async (req, res) => {
+    //crashes when packet is empty due to regex
     const {email, password} = req.body;
+    //console.log(email, password);
     if (email.match(regexEmail) && email.length > 5 && password.length >= 3) {
         const isValidEmployee = await Employee.findOne({email});
         const isValidAdmin = await Admin.findOne({email});
@@ -136,16 +139,18 @@ app.post('/sign-in', async (req, res) => {
         const ip = req.ip
         //console.log(ip);
         if (isValidEmployee && sha256(password) == isValidEmployee.password) {
-            req.session.employee_id = isValidEmployee._id;
+            //req.session.employee_id = isValidEmployee._id;
+            req.session.user = isValidEmployee._id;
             //logs employee logged in
-            addLogs('web-employee-login', isValidEmployee._id, ip);
+            addLogs('web-employee-login', isValidEmployee._id, '0', ip);
             return res.status(200).redirect('/');
             // return res.status(200).json({
             //     'confirmation': 'success',
             //     'name': isValidEmployee.name.charAt(0).toUpperCase() + isValidEmployee.name.slice(1)
             // });
         } else if (isValidAdmin && sha256(password) == isValidAdmin.password) {
-            req.session.admin_id = isValidAdmin._id;
+            //req.session.admin_id = isValidAdmin._id;
+            req.session.user =  isValidAdmin._id;
             //logs admin sign in
             addLogs('web-admin-login', isValidAdmin._id, '0', ip);
             return res.status(200).redirect('/');
@@ -166,22 +171,26 @@ app.post('/sign-in', async (req, res) => {
 })
 
 //Double check if found instead of session just existing
-app.get('/sign-up.html', (req, res) => {
+app.get('/sign-up.html', async (req, res) => {
     //console.log('sign in');
-    if (!req.session.employee_id && !req.session.admin_id) {
-        res.redirect('/sign-in.html');
-    } else {
+    const validSessionAdmin = await Admin.findById(req.session.user);
+    const validSessionEmployee = await Employee.findById(req.session.user)
+    if (validSessionAdmin || validSessionEmployee) {
         res.sendFile(path.resolve(__dirname, './private/sign-up.html'));
+        
+    } else {
+        res.redirect('/sign-in.html')
     }
 })
 
-app.get('/logs.html', (req, res) => {
+app.get('/logs.html', async (req, res) => {
     //console.log('sign in');
-    if (!req.session.admin_id) {
-        res.send('unauthorized');
-    } else {
+    const validSessionAdmin = await Admin.findById(req.session.user);
+    if (validSessionAdmin) {
         res.sendFile(path.resolve(__dirname, './private/logs.html'));
         //logs of admin
+    } else {
+        res.send('unauthorized');
     }
 })
 

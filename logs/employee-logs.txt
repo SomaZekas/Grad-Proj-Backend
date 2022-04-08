@@ -4,3 +4,11 @@
 4/7/2022, 10:57:26 PM: Employee with id of {_id: ObjectId('6232fd8d907dded0a6663bb4')} logged in with ip ----.
 4/7/2022, 10:59:19 PM: Employee with id of {_id: ObjectId('6232fd8d907dded0a6663bb4')} logged in with ip ::ffff:127.0.0.1.
 4/7/2022, 10:59:42 PM: Employee with id of {_id: ObjectId('6232fd8d907dded0a6663bb4')} logged in with ip .
+4/8/2022, 1:02:23 AM: Employee with id of {_id: ObjectId('6232fd8d907dded0a6663bb4')} logged in with ip undefined.
+4/8/2022, 1:03:26 AM: Employee with id of {_id: ObjectId('6232fd8d907dded0a6663bb4')} logged in with ip undefined.
+4/8/2022, 1:04:06 AM: Employee with id of {_id: ObjectId('6232fd8d907dded0a6663bb4')} logged in with ip undefined.
+4/8/2022, 1:05:06 AM: Employee with id of {_id: ObjectId('6232fd8d907dded0a6663bb4')} logged in with ip ::ffff:127.0.0.1.
+4/8/2022, 1:21:42 AM: Employee with id of {_id: ObjectId('6232fd8d907dded0a6663bb4')} logged in with ip ::ffff:127.0.0.1.
+4/8/2022, 1:27:55 AM: Employee with id of {_id: ObjectId('6232fd8d907dded0a6663bb4')} logged in with ip ::ffff:127.0.0.1.
+4/8/2022, 4:33:33 AM: Employee with id of {_id: ObjectId('6232fd8d907dded0a6663bb4')} logged in with ip ::ffff:127.0.0.1.
+4/8/2022, 4:56:39 AM: Employee with id of {_id: ObjectId('6232fd8d907dded0a6663bb4')} logged in with ip ::ffff:127.0.0.1.

@@ -10,7 +10,8 @@ const Owner = new mongoose.Schema({
     phone: {type: String, trim: true, default:''},
     address: {type: String, trim: true, default:''},
     email: {type: String, trim: true, default: ''},
-    active_qr: [{type: mongoose.Types.ObjectId, trim: true}]
+    active_qr: [{type: mongoose.Types.ObjectId, trim: true}],
+    added_by_employee: {type: mongoose.Types.ObjectId, trim: true}
 
 
 });
