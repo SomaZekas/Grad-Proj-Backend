@@ -4,6 +4,11 @@
  * 
  * https://stackoverflow.com/questions/10849687/express-js-how-to-get-remote-client-address
  * 
+ * How To Serve A React App From A Node Express Server: https://www.youtube.com/watch?v=QBXWZPy1Zfs
+ * Deploy a React App with ExpressJS and Nginx: https://www.youtube.com/watch?v=6CjbezdbB8o
+ * https://www.freecodecamp.org/news/how-to-create-a-react-app-with-a-node-backend-the-complete-guide/
+ * 
+ * 
  */
 const express = require('express');
 const app = express();
@@ -55,7 +60,7 @@ mongoose.connect('mongodb://localhost:27017/test').then(()=> {
     console.log(err);
 })
 
-const addLogs = require('./models/Log');
+const addLogs = require('./modules/Log');
 
 const Owner = require('./models/Owner')
 const Guest = require('./models/Guest')
@@ -131,7 +136,7 @@ app.post('/sign-in', async (req, res) => {
     //crashes when packet is empty due to regex
     const {email, password} = req.body;
     //console.log(email, password);
-    if (email.match(regexEmail) && email.length > 5 && password.length >= 3) {
+    if ((email != '' && password != '') && email.match(regexEmail) && email.length > 5 && password.length >= 3) {
         const isValidEmployee = await Employee.findOne({email});
         const isValidAdmin = await Admin.findOne({email});
         //const ip = req.headers['x-forwaded-for']
@@ -170,17 +175,126 @@ app.post('/sign-in', async (req, res) => {
 
 })
 
-//Double check if found instead of session just existing
 app.get('/sign-up.html', async (req, res) => {
     //console.log('sign in');
     const validSessionAdmin = await Admin.findById(req.session.user);
     const validSessionEmployee = await Employee.findById(req.session.user)
-    if (validSessionAdmin || validSessionEmployee) {
-        res.sendFile(path.resolve(__dirname, './private/sign-up.html'));
+    if (validSessionAdmin) {
+        res.sendFile(path.resolve(__dirname, './private/sign-up-admin.html'));
         
+    } else if (validSessionEmployee) {
+        res.sendFile(path.resolve(__dirname, './private/sign-up.html'));
+
     } else {
         res.redirect('/sign-in.html')
     }
+})
+
+app.post('/add-person', async (req, res) => {
+    //test then clean
+    console.log(req.body);
+    
+    const authorizedAdmin = await Admin.findById(req.session.user);
+    const authorizedEmployee = await Employee.findById(req.session.user);
+    
+    if (authorizedAdmin) {
+        if (req.body.select == 'Admin') {
+            const alreadyExists = await Admin.findOne({email: req.body.email})
+            if (alreadyExists) {
+                return res.send('Email already exists!')
+            }
+
+            try {
+                const newAdmin = await Admin.create(req.body);
+                await authorizedAdmin.updateOne({$push: { added: newAdmin._id}})
+                await newAdmin.updateOne({ added_by_admin: authorizedAdmin._id})
+        
+                res.status(200).json({
+                    'confirmation': 'success',
+                });
+            } catch (error) {
+                console.log(error);
+                res.status(400).json({
+                    'confirmation': 'failure',
+                });
+            }
+
+        } else if (req.body.select == 'Employee') {
+            const alreadyExists = await Employee.findOne({email: req.body.email})
+            if (alreadyExists) {
+                return res.send('Email already exists!')
+            }
+
+            try {
+                const newEmployee = await Employee.create(req.body);
+                await authorizedAdmin.updateOne({$push: { added: newEmployee._id}})
+                await newEmployee.updateOne({ added_by_admin: authorizedAdmin._id})
+        
+                res.status(200).json({
+                    'confirmation': 'success',
+                });
+            } catch (error) {
+                console.log(error);
+                res.status(400).json({
+                    'confirmation': 'failure',
+                });
+            }
+
+        } else if (req.body.select == 'Owner') {
+            const alreadyExists = await Owner.findOne({email: req.body.email})
+            if (alreadyExists) {
+                return res.send('Email already exists!')
+            }
+
+            try {
+                const newOwner = await Owner.create(req.body);
+                await authorizedAdmin.updateOne({$push: { added: newPerson._id}})
+                await newOwner.updateOne({ added_by_employee: authorizedAdmin._id})
+        
+                res.status(200).json({
+                    'confirmation': 'success',
+                });
+            } catch (error) {
+                console.log(error);
+                res.status(400).json({
+                    'confirmation': 'failure',
+                });
+            }
+
+        } else {
+            res.send('Error!')
+        }
+    } else if (authorizedEmployee) {
+
+        const alreadyExists = await Owner.findOne({email: req.body.email})
+        if (alreadyExists) {
+            return res.send('Email already exists!')
+        }
+        try {
+            const newOwner = await Owner.create(req.body);
+            await authorizedEmployee.updateOne({$push: { added: newOwner._id}})
+            await newPerson.updateOne({ added_by_employee: authorizedEmployee._id})
+    
+            res.status(200).json({
+                'confirmation': 'success',
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(400).json({
+                'confirmation': 'failure',
+            });
+        }
+
+    } else {
+        res.send('UnAuthorized!')
+    }
+
+    //try promise
+
+    //logs owner adds guest (to be tested)
+    //addLogs('mobile-owner-add-guest', guest_owner._id, newGuest._id, '0')
+        
+    
 })
 
 app.get('/logs.html', async (req, res) => {
@@ -289,7 +403,7 @@ app.post('/owners/newguest', async (req, res) => {
             });
         }
 
-        //is this supposed to be inside the try catch?
+        //is this supposed to be inside the try catch? why didn't use promeise?
         const guest_owner = await Owner.findOne({email: ownerEmail});
         await guest_owner.updateOne({ $push: { active_qr: newGuest._id }});
         await newGuest.updateOne({owner_id: guest_owner._id});
@@ -341,7 +455,6 @@ app.listen(5000, () => {
  * - Authorize the view of records, logs, edit of owner's data
  * - Authorize Sign up (admin -> owners, employees. employees(sales) -> owners.)
  * - Session ID (expires?)
- * - Associate employees with owner
  * - Once gate opens, details of guest and data are shown in the web
  * - Owner's forgot passward, send to email
  * Mobile:
@@ -363,6 +476,7 @@ app.listen(5000, () => {
  * - When adding a new admin, employee, and owner, make sure the email isn't already registered (WEB)
  * - Associate employees with created owners (WEB)
  * - A signed in user can sign in again (WEB)
+ * - Check if employee is an authorized employee (sales not a garbage man for example)
  * Hardware:
  * ---------
  * - Authenticate with server (save session id?)

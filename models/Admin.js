@@ -10,7 +10,9 @@ const Admin = new mongoose.Schema({
     address: {type: String, trim: true, default:''},
     email: {type: String, trim: true, default:''},
     password: {type: String, trim: true, default:''},
-    job_title: {type: String, trim: true, default:''}
+    job_title: {type: String, trim: true, default:''},
+    added: [{type: mongoose.Types.ObjectId, trim: true}],
+    added_by_admin: {type: mongoose.Types.ObjectId, trim: true}
 
 
 });
