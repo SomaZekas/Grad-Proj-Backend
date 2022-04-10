@@ -30,7 +30,7 @@ const addLogs = (type, id1, id2, ip) => {
     } else if (type == 'mobile-owner-add-guest') {
         fs.appendFile(
             './logs/owner-logs.txt',
-            logTime + ': Owner with id of {_id: ObjectId(\'' + id1 + '\')} a guest with id of {_id: ObjectId(\'' + id2 + '\')} and generated a QR Code.\n',
+            logTime + ': Owner with id of {_id: ObjectId(\'' + id1 + '\')} added a guest with id of {_id: ObjectId(\'' + id2 + '\')} and generated a QR Code.\n',
             err => { if (err) throw err; }
         )
     } else if (type == 'hardware-guest') {

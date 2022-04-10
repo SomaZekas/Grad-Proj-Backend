@@ -60,6 +60,8 @@ mongoose.connect('mongodb://localhost:27017/test').then(()=> {
     console.log(err);
 })
 
+const mobile = require('./routes/mobile');
+
 const addLogs = require('./modules/Log');
 
 const Owner = require('./models/Owner')
@@ -111,6 +113,8 @@ app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 app.use(session({ secret: '^kk#o@OZ332o06^4' }))
 
+app.use('/owners', mobile)
+
 //logs server
 addLogs('server-boot', '0', '0', '0');
 
@@ -133,20 +137,17 @@ app.get('/owners', (req, res) => {
 
 //Web
 app.post('/sign-in', async (req, res) => {
-    //crashes when packet is empty due to regex
     const {email, password} = req.body;
     //console.log(email, password);
     if ((email != '' && password != '') && email.match(regexEmail) && email.length > 5 && password.length >= 3) {
         const isValidEmployee = await Employee.findOne({email});
         const isValidAdmin = await Admin.findOne({email});
-        //const ip = req.headers['x-forwaded-for']
-        //const ip = req.socket.remoteAddress;
         const ip = req.ip
-        //console.log(ip);
+        // const ip = req.headers['x-forwaded-for']
+        // const ip = req.socket.remoteAddress;
+        // console.log(ip);
         if (isValidEmployee && sha256(password) == isValidEmployee.password) {
-            //req.session.employee_id = isValidEmployee._id;
             req.session.user = isValidEmployee._id;
-            //logs employee logged in
             addLogs('web-employee-login', isValidEmployee._id, '0', ip);
             return res.status(200).redirect('/');
             // return res.status(200).json({
@@ -154,9 +155,7 @@ app.post('/sign-in', async (req, res) => {
             //     'name': isValidEmployee.name.charAt(0).toUpperCase() + isValidEmployee.name.slice(1)
             // });
         } else if (isValidAdmin && sha256(password) == isValidAdmin.password) {
-            //req.session.admin_id = isValidAdmin._id;
             req.session.user =  isValidAdmin._id;
-            //logs admin sign in
             addLogs('web-admin-login', isValidAdmin._id, '0', ip);
             return res.status(200).redirect('/');
         } else {
@@ -171,7 +170,6 @@ app.post('/sign-in', async (req, res) => {
             'message': 'Enter valid credentials.'
         });
     }
-
 
 })
 
@@ -308,11 +306,10 @@ app.get('/logs.html', async (req, res) => {
     }
 })
 
-app.get('/secpic', (req, res) => {
+app.get('/secpic', async (req, res) => {
     //console.log('sign in');
-    if (!req.session.admin_id) {
-        res.send('unauthorized');
-    } else {
+    const authorizedAdmin = await Admin.findById(req.session.user)
+    if (authorizedAdmin) {
         Guest.find().select('entrance_img')
         .then(guests => {
             res.json({
@@ -327,15 +324,18 @@ app.get('/secpic', (req, res) => {
                 message: err.message
             })
         })
+    } else {
+        res.send('unauthorized');
     }
 })
 
-app.get('/samplelogs', (req, res) => {
+app.get('/samplelogs', async (req, res) => {
     //console.log('sign in');
-    if (!req.session.admin_id) {
-        res.send('unauthorized');
+    const authorizedAdmin = await Admin.findById(req.session.user)
+    if (authorizedAdmin) {
+        res.sendFile(path.resolve(__dirname, './logs/_sample.txt'));
     } else {
-        res.sendFile(path.resolve(__dirname, './logs/sample.txt'));
+        res.send('unauthorized');
     }
 })
 
@@ -344,75 +344,6 @@ app.post('/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/');
 })
-
-
-
-
-//Login from mobile app
-app.post('/owners', async (req, res) => {
-    const {from} = req.body;
-    const ip = req.ip
-    if (from == 'Mobile') {
-        const {email, password} = req.body;
-        console.log(email);
-        if (email.match(regexEmail) && email.length > 5 && password.length >= 3) {
-            const isValidOwner = await Owner.findOne({email});
-            if (sha256(password) == isValidOwner.password) {
-                //logs of owner log in (to be tested)
-                addLogs('mobile-owner-login', isValidOwner._id, '0', ip)
-                return res.status(200).json({
-                    'confirmation': 'success',
-                    'name': isValidOwner.name.charAt(0).toUpperCase() + isValidOwner.name.slice(1)
-                });
-            } else {
-                return res.status(401).json({
-                    'confirmation': 'failure',
-                    'message': 'Wrong Credentials.'
-                });
-            }
-        } else {
-            return res.status(401).json({
-                'confirmation': 'failure',
-                'message': 'Enter valid credentials.'
-            });
-        } 
-        
-    }
-})
-
-//Owner adds a new guest
-app.post('/owners/newguest', async (req, res) => {
-    //console.log(req.body);
-    const {from, ownerEmail} = req.body;
-    if (from == 'Mobile') {
-        //const {name, date, car_id, hashed} = req.body;
-        //Date regex?
-        //const regexDate = [0-3][0-9]-[01][1-9]-[0-9][0-9][0-9][0-9]; //to be checked
-        //Car plate regex?
-        //console.log(date);
-        let newGuest;
-        try {
-            newGuest = await Guest.create(req.body);
-            res.status(200).json({
-                'confirmation': 'success',
-            });
-        } catch (error) {
-            console.log(error);
-            res.status(400).json({
-                'confirmation': 'failure',
-            });
-        }
-
-        //is this supposed to be inside the try catch? why didn't use promeise?
-        const guest_owner = await Owner.findOne({email: ownerEmail});
-        await guest_owner.updateOne({ $push: { active_qr: newGuest._id }});
-        await newGuest.updateOne({owner_id: guest_owner._id});
-        //logs owner adds guest (to be tested)
-        addLogs('mobile-owner-add-guest', guest_owner._id, newGuest._id, '0')
-        
-    }
-})
-
 
 
 

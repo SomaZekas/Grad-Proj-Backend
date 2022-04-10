@@ -1,0 +1,9 @@
+4/10/2022, 2:33:41 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} a guest with id of {_id: ObjectId('625225e5f4fef90cdeb6650e')} and generated a QR Code.
+4/10/2022, 2:48:30 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} added a guest with id of {_id: ObjectId('6252295e28608b19c95874d8')} and generated a QR Code.
+4/10/2022, 2:54:02 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} added a guest with id of {_id: ObjectId('62522aaa83d4bd0509fb7f92')} and generated a QR Code.
+4/10/2022, 2:55:58 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} added a guest with id of {_id: ObjectId('62522b1e1beed588e6da6620')} and generated a QR Code.
+4/10/2022, 2:58:19 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} added a guest with id of {_id: ObjectId('62522bab7f74e8e657b6179e')} and generated a QR Code.
+4/10/2022, 2:59:02 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} added a guest with id of {_id: ObjectId('62522bd62bbb3396a8fae4e4')} and generated a QR Code.
+4/10/2022, 3:02:43 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} added a guest with id of {_id: ObjectId('62522cb30dd410698a04ceec')} and generated a QR Code.
+4/10/2022, 3:22:13 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.1.27.
+4/10/2022, 3:23:17 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.1.27.

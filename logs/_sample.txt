@@ -20,7 +20,7 @@ Hardware:
 Owner:
     ✔ 4/4/2022, 2:36:23 AM: Owner with id of ---- logged in with ip ----.
     4/4/2022, 2:36:23 AM: Owner with id of ---- entered the preimeter.
-    ✔ 4/4/2022, 2:36:23 AM: Owner with id of ---- added a guest with id of ---- and generated a QR Code.
+    ✅4/4/2022, 2:36:23 AM: Owner with id of ---- added a guest with id of ---- and generated a QR Code.
 
 Server:
     ✅4/4/2022, 2:36:23 AM: Server successfully booted.
