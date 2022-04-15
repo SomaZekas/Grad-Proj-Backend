@@ -1,6 +1,6 @@
 Admin:
     ✅4/4/2022, 2:36:23 AM: Admin with id of ---- logged in with ip ----.
-    4/4/2022, 2:36:23 AM: Admin with id of ---- viewed the records of ----.
+    ✅4/4/2022, 2:36:23 AM: Admin with id of ---- viewed the records of ----.
     4/4/2022, 2:36:23 AM: Admin with id of ---- added a [guest, employee, admin, owner, hardware] with id of ----.
     4/4/2022, 2:36:23 AM: Admin with id of ---- entered the preimeter.
 
@@ -10,7 +10,7 @@ Employee:
     4/4/2022, 2:36:23 AM: Employee with id of ---- added a owner with id of ----.
 
 Guest:
-    ✔ 4/4/2022, 2:36:23 AM: Guest with id of ---- entered the premiter with QR Code linked with owner's id of ----.
+    ✅4/4/2022, 2:36:23 AM: Guest with id of ---- entered the premiter with QR Code linked with owner's id of ----.
 
 Hardware:
     4/4/2022, 2:36:23 AM: Hardware with id of ---- logged in with ip ----.
@@ -18,7 +18,7 @@ Hardware:
     4/4/2022, 2:36:23 AM: Hardware with id of ---- sent picture of guest with id of ---- to server with link of ----.
 
 Owner:
-    ✔ 4/4/2022, 2:36:23 AM: Owner with id of ---- logged in with ip ----.
+    ✅4/4/2022, 2:36:23 AM: Owner with id of ---- logged in with ip ----.
     4/4/2022, 2:36:23 AM: Owner with id of ---- entered the preimeter.
     ✅4/4/2022, 2:36:23 AM: Owner with id of ---- added a guest with id of ---- and generated a QR Code.
 

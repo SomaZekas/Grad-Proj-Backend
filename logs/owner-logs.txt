@@ -7,3 +7,4 @@
 4/10/2022, 3:02:43 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} added a guest with id of {_id: ObjectId('62522cb30dd410698a04ceec')} and generated a QR Code.
 4/10/2022, 3:22:13 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.1.27.
 4/10/2022, 3:23:17 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.1.27.
+4/10/2022, 8:59:21 PM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} added a guest with id of {_id: ObjectId('62532909734a840bc963ee84')} and generated a QR Code.

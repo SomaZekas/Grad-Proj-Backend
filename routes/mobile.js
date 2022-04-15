@@ -4,8 +4,8 @@ const router = express.Router();
 const sha256 = require('js-sha256').sha256;
 
 //Importing models used in this route.
-const Owner = require('../models/Owner')
-const Guest = require('../models/Guest')
+const Owner = require('../models/Owner');
+const Guest = require('../models/Guest');
 
 //Importing logs module.
 const addLogs = require('../modules/Log');
@@ -50,7 +50,7 @@ router.post('/', async (req, res) => {
 
 //Owner adds a new guest
 router.post('/newguest', async (req, res) => {
-    const {from, ownerEmail, ownerPassword} = req.body; //Takes important variables from request body.
+    const {from, ownerEmail, ownerPassword, name, date, car_id} = req.body; //Takes important variables from request body.
     if (from == 'Mobile') { //Checks if request from mobile.
         
         //const {name, date, car_id, hashed} = req.body;
@@ -61,7 +61,7 @@ router.post('/newguest', async (req, res) => {
 
         //Checks if credentials were valid, if not will return undefined.
         const validOwner = await Owner.findOne({email: ownerEmail, password: sha256(ownerPassword)});
-        if (validOwner){
+        if (validOwner && (name != '' && date != '' && car_id != '')){
             try {
                 const newGuest = await Guest.create(req.body); //Creating a new guest in database.
 
@@ -82,6 +82,11 @@ router.post('/newguest', async (req, res) => {
             }
     
 
+        } else {
+            res.status(401).json({
+                'confirmation': 'failure',
+                'message': 'Enter valid credentials.'
+            });
         }
         
     }

@@ -39,6 +39,12 @@ const addLogs = (type, id1, id2, ip) => {
             logTime + ': Guest with id of {_id: ObjectId(\'' + id1 + '\')} entered the premiter with QR Code linked with owner\'s id of {_id: ObjectId(\'' + id2 + '\')}.\n',
             err => { if (err) throw err; }
         )
+    } else if (type == 'web-admin-logs') {
+        fs.appendFile(
+            './logs/admin-logs.txt',
+            logTime + ': Admin with id of {_id: ObjectId(\'' + id1 + '\')} viewed the ' + id2 + ' logs.\n',
+            err => { if (err) throw err; }
+        )
     }
 }
 

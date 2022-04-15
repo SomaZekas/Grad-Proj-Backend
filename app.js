@@ -14,35 +14,35 @@ const express = require('express');
 const app = express();
 //const bodyParser = require('body-parser')
 const multer = require('multer')
-const cloudinary = require('cloudinary').v2;
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
+// const cloudinary = require('cloudinary').v2;
+// const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
-// dotenv file
-const CLOUNDINARY_CLOUD_NAME = 'dodmtp0m2';
-const CLOUDINARY_KEY = '872594197768919';
-const CLOUDINARY_SECRET = 'caLYZKrjQcANYesu0IPYCt4vJJQ';
-//put in module
-cloudinary.config({
-    cloud_name: CLOUNDINARY_CLOUD_NAME,
-    api_key: CLOUDINARY_KEY,
-    api_secret: CLOUDINARY_SECRET
-});
+// // dotenv file
+// const CLOUNDINARY_CLOUD_NAME = 'dodmtp0m2';
+// const CLOUDINARY_KEY = '872594197768919';
+// const CLOUDINARY_SECRET = 'caLYZKrjQcANYesu0IPYCt4vJJQ';
+// //put in module
+// cloudinary.config({
+//     cloud_name: CLOUNDINARY_CLOUD_NAME,
+//     api_key: CLOUDINARY_KEY,
+//     api_secret: CLOUDINARY_SECRET
+// });
 
-const storage = new CloudinaryStorage({
-    cloudinary,
-    params: {
-        folder: 'test',
-        allowedFormats: ['jepg', 'png', 'jpg'],
-        use_filename: true,
-        public_id: (req, file) => {
-            const timestamp = Date.now();
-            return timestamp + '_' + file.originalname;
-        }
-    } 
-});
+// const storage = new CloudinaryStorage({
+//     cloudinary,
+//     params: {
+//         folder: 'test',
+//         allowedFormats: ['jepg', 'png', 'jpg'],
+//         use_filename: true,
+//         public_id: (req, file) => {
+//             const timestamp = Date.now();
+//             return timestamp + '_' + file.originalname;
+//         }
+//     } 
+// });
 
+const {storage} = require('./modules/Cloudinary')
 const upload = multer({storage})
-//const upload = multer({dest: './uploads/'})
 
 const sha256 = require('js-sha256').sha256;
 const NodeRSA = require('node-rsa');
@@ -108,7 +108,8 @@ keyRSA.importKey(fs.readFileSync('./keys/public.pem', 'utf-8'), 'public');
 
 const regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
-app.use(express.static('./public'))
+//app.use(express.static('./public'))
+app.use(express.static('./public/build'))
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 app.use(session({ secret: '^kk#o@OZ332o06^4' }))
@@ -118,29 +119,11 @@ app.use('/owners', mobile)
 //logs server
 addLogs('server-boot', '0', '0', '0');
 
-//Testing
-app.get('/owners', (req, res) => {
-    Owner.find()
-    .then(owners => {
-        res.json({
-            confirmation: 'success',
-            data: owners
-        })
-    })
-    .catch(err => {
-        res.json({
-            confirmation: 'failure',
-            message: err.message
-        })
-    })
-})
-
-//Web
+//React testing
 app.post('/sign-in', async (req, res) => {
     const {email, password} = req.body;
-    //console.log(email, password);
     if ((email != '' && password != '') && email.match(regexEmail) && email.length > 5 && password.length >= 3) {
-        const isValidEmployee = await Employee.findOne({email});
+        const isValidEmployee = await Employee.findOne({email: email, job_title: 'sales'});
         const isValidAdmin = await Admin.findOne({email});
         const ip = req.ip
         // const ip = req.headers['x-forwaded-for']
@@ -149,15 +132,19 @@ app.post('/sign-in', async (req, res) => {
         if (isValidEmployee && sha256(password) == isValidEmployee.password) {
             req.session.user = isValidEmployee._id;
             addLogs('web-employee-login', isValidEmployee._id, '0', ip);
-            return res.status(200).redirect('/');
-            // return res.status(200).json({
-            //     'confirmation': 'success',
-            //     'name': isValidEmployee.name.charAt(0).toUpperCase() + isValidEmployee.name.slice(1)
-            // });
+            return res.status(200).json({
+                    'confirmation': 'success',
+                    'name': isValidEmployee.name.charAt(0).toUpperCase() + isValidEmployee.name.slice(1),
+                    'role': isValidEmployee.job_title
+                });
         } else if (isValidAdmin && sha256(password) == isValidAdmin.password) {
             req.session.user =  isValidAdmin._id;
             addLogs('web-admin-login', isValidAdmin._id, '0', ip);
-            return res.status(200).redirect('/');
+            return res.status(200).json({
+                'confirmation': 'success',
+                'name': isValidAdmin.name.charAt(0).toUpperCase() + isValidAdmin.name.slice(1),
+                'role': 'admin'
+            });
         } else {
             return res.status(401).json({
                 'confirmation': 'failure',
@@ -170,36 +157,24 @@ app.post('/sign-in', async (req, res) => {
             'message': 'Enter valid credentials.'
         });
     }
-
-})
-
-app.get('/sign-up.html', async (req, res) => {
-    //console.log('sign in');
-    const validSessionAdmin = await Admin.findById(req.session.user);
-    const validSessionEmployee = await Employee.findById(req.session.user)
-    if (validSessionAdmin) {
-        res.sendFile(path.resolve(__dirname, './private/sign-up-admin.html'));
-        
-    } else if (validSessionEmployee) {
-        res.sendFile(path.resolve(__dirname, './private/sign-up.html'));
-
-    } else {
-        res.redirect('/sign-in.html')
-    }
 })
 
 app.post('/add-person', async (req, res) => {
     //test then clean
-    console.log(req.body);
+    // console.log(req.body);
+    // console.log(req.session.user);
     
     const authorizedAdmin = await Admin.findById(req.session.user);
-    const authorizedEmployee = await Employee.findById(req.session.user);
+    const authorizedEmployee = await Employee.findOne({_id:req.session.user, job_title: 'sales'});
     
     if (authorizedAdmin) {
         if (req.body.select == 'Admin') {
             const alreadyExists = await Admin.findOne({email: req.body.email})
             if (alreadyExists) {
-                return res.send('Email already exists!')
+                return res.status(200).json({
+                    'confirmation': 'failure',
+                    'message': 'Email already exists!'
+                });
             }
 
             try {
@@ -214,13 +189,17 @@ app.post('/add-person', async (req, res) => {
                 console.log(error);
                 res.status(400).json({
                     'confirmation': 'failure',
+                    'message': 'Try Again!'
                 });
             }
 
         } else if (req.body.select == 'Employee') {
             const alreadyExists = await Employee.findOne({email: req.body.email})
             if (alreadyExists) {
-                return res.send('Email already exists!')
+                return res.status(200).json({
+                    'confirmation': 'failure',
+                    'message': 'Email already exists!'
+                });
             }
 
             try {
@@ -235,13 +214,17 @@ app.post('/add-person', async (req, res) => {
                 console.log(error);
                 res.status(400).json({
                     'confirmation': 'failure',
+                    'message': 'Try Again!'
                 });
             }
 
         } else if (req.body.select == 'Owner') {
             const alreadyExists = await Owner.findOne({email: req.body.email})
             if (alreadyExists) {
-                return res.send('Email already exists!')
+                return res.status(200).json({
+                    'confirmation': 'failure',
+                    'message': 'Email already exists!'
+                });
             }
 
             try {
@@ -256,6 +239,7 @@ app.post('/add-person', async (req, res) => {
                 console.log(error);
                 res.status(400).json({
                     'confirmation': 'failure',
+                    'message': 'Try Again!'
                 });
             }
 
@@ -266,12 +250,15 @@ app.post('/add-person', async (req, res) => {
 
         const alreadyExists = await Owner.findOne({email: req.body.email})
         if (alreadyExists) {
-            return res.send('Email already exists!')
+            return res.status(200).json({
+                'confirmation': 'failure',
+                'message': 'Email already exists!'
+            });
         }
         try {
             const newOwner = await Owner.create(req.body);
             await authorizedEmployee.updateOne({$push: { added: newOwner._id}})
-            await newPerson.updateOne({ added_by_employee: authorizedEmployee._id})
+            await newOwner.updateOne({ added_by_employee: authorizedEmployee._id})
     
             res.status(200).json({
                 'confirmation': 'success',
@@ -280,11 +267,15 @@ app.post('/add-person', async (req, res) => {
             console.log(error);
             res.status(400).json({
                 'confirmation': 'failure',
+                'message': 'Try Again!'
             });
         }
 
     } else {
-        res.send('UnAuthorized!')
+        return res.status(400).json({
+            'confirmation': 'failure',
+            'message': 'Unauthorized!'
+        });
     }
 
     //try promise
@@ -295,21 +286,20 @@ app.post('/add-person', async (req, res) => {
     
 })
 
-app.get('/logs.html', async (req, res) => {
-    //console.log('sign in');
-    const validSessionAdmin = await Admin.findById(req.session.user);
-    if (validSessionAdmin) {
-        res.sendFile(path.resolve(__dirname, './private/logs.html'));
-        //logs of admin
-    } else {
-        res.send('unauthorized');
-    }
+app.get('/logout', (req, res) => {
+    //logs of user logged out
+    req.session.destroy();
+    //res.redirect('/');
+    res.end();
 })
 
-app.get('/secpic', async (req, res) => {
-    //console.log('sign in');
+app.get('/logs/:type', async (req, res) => {
+    const {type} = req.params
     const authorizedAdmin = await Admin.findById(req.session.user)
-    if (authorizedAdmin) {
+    if (authorizedAdmin && type != 'gate-pictures') {
+        res.sendFile(path.resolve(__dirname, './logs/' + type + '-logs.txt'));
+        addLogs('web-admin-logs', authorizedAdmin._id, type, '0')
+    } else if (authorizedAdmin && type == 'gate-pictures') {
         Guest.find().select('entrance_img')
         .then(guests => {
             res.json({
@@ -317,33 +307,105 @@ app.get('/secpic', async (req, res) => {
                 data: guests
             })
             //logs of admin viewed records
+            addLogs('web-admin-logs', authorizedAdmin._id, type, '0')
         })
         .catch(err => {
             res.json({
-                confirmation: 'failure',
-                message: err.message
+                'confirmation': 'failure',
+                'message': err.message
             })
         })
     } else {
-        res.send('unauthorized');
+        res.status(401).json({
+            'confirmation': 'failure',
+            'message': 'Unauthorized!'
+        });
     }
 })
 
-app.get('/samplelogs', async (req, res) => {
-    //console.log('sign in');
-    const authorizedAdmin = await Admin.findById(req.session.user)
-    if (authorizedAdmin) {
-        res.sendFile(path.resolve(__dirname, './logs/_sample.txt'));
-    } else {
-        res.send('unauthorized');
-    }
-})
 
-app.post('/logout', (req, res) => {
-    //logs of user logged out
-    req.session.destroy();
-    res.redirect('/');
-})
+// app.get('/verify-role-react', (req, res) => {
+//     console.log(req.body);
+//     res.json({
+//         'confirmation': 'success',
+//         'role': 'admin'
+//     })
+// })
+
+
+
+//Testing
+// app.get('/keys', (req, res) => {
+//     res.json({
+//         'public': keyRSA.exportKey('public'),
+//         'private': keyRSA.exportKey('private')
+//     })
+// })
+
+//Web
+// app.post('/sign-in', async (req, res) => {
+//     const {email, password} = req.body;
+//     console.log(email, password);
+//     if ((email != '' && password != '') && email.match(regexEmail) && email.length > 5 && password.length >= 3) {
+//         const isValidEmployee = await Employee.findOne({email});
+//         const isValidAdmin = await Admin.findOne({email});
+//         const ip = req.ip
+//         // const ip = req.headers['x-forwaded-for']
+//         // const ip = req.socket.remoteAddress;
+//         // console.log(ip);
+//         if (isValidEmployee && sha256(password) == isValidEmployee.password) {
+//             req.session.user = isValidEmployee._id;
+//             addLogs('web-employee-login', isValidEmployee._id, '0', ip);
+//             return res.status(200).redirect('/');
+//             // return res.status(200).json({
+//             //     'confirmation': 'success',
+//             //     'name': isValidEmployee.name.charAt(0).toUpperCase() + isValidEmployee.name.slice(1)
+//             // });
+//         } else if (isValidAdmin && sha256(password) == isValidAdmin.password) {
+//             req.session.user =  isValidAdmin._id;
+//             addLogs('web-admin-login', isValidAdmin._id, '0', ip);
+//             return res.status(200).redirect('/');
+//         } else {
+//             return res.status(401).json({
+//                 'confirmation': 'failure',
+//                 'message': 'Wrong Credentials.'
+//             });
+//         }
+//     } else {
+//         return res.status(401).json({
+//             'confirmation': 'failure',
+//             'message': 'Enter valid credentials.'
+//         });
+//     }
+
+// })
+
+// app.get('/sign-up.html', async (req, res) => {
+//     //console.log('sign in');
+//     const validSessionAdmin = await Admin.findById(req.session.user);
+//     const validSessionEmployee = await Employee.findById(req.session.user)
+//     if (validSessionAdmin) {
+//         res.sendFile(path.resolve(__dirname, './private/sign-up-admin.html'));
+        
+//     } else if (validSessionEmployee) {
+//         res.sendFile(path.resolve(__dirname, './private/sign-up.html'));
+
+//     } else {
+//         res.redirect('/sign-in.html')
+//     }
+// })
+
+// app.get('/logs.html', async (req, res) => {
+//     const validSessionAdmin = await Admin.findById(req.session.user);
+//     if (validSessionAdmin) {
+//         res.sendFile(path.resolve(__dirname, './private/logs.html'));
+//         //logs of admin
+//     } else {
+//         res.send('unauthorized');
+//     }
+// })
+
+
 
 
 
@@ -384,7 +446,6 @@ app.listen(5000, () => {
  * Web:
  * ----
  * - Authorize the view of records, logs, edit of owner's data
- * - Authorize Sign up (admin -> owners, employees. employees(sales) -> owners.)
  * - Session ID (expires?)
  * - Once gate opens, details of guest and data are shown in the web
  * - Owner's forgot passward, send to email
@@ -399,15 +460,11 @@ app.listen(5000, () => {
  * - Owner generates his own qr to enter
  * Server:
  * -------
- * - Logging every action (ALL) (semi-done)
+ * - Logging every action (ALL) (Hardware)
  * - server saves the image from gate with timestamp (HARDWARE)
  * - Selected image will be added in the selected guest's database (HARDWARE)
  * - Authenticate hardware (HARDWARE)
  * - Hashing passwords (WEB)
- * - When adding a new admin, employee, and owner, make sure the email isn't already registered (WEB)
- * - Associate employees with created owners (WEB)
- * - A signed in user can sign in again (WEB)
- * - Check if employee is an authorized employee (sales not a garbage man for example)
  * Hardware:
  * ---------
  * - Authenticate with server (save session id?)

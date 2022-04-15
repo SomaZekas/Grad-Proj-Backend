@@ -1,0 +1,1 @@
+4/11/2022, 12:40:57 AM: Guest with id of {_id: ObjectId('624a15f1d369cefe2812a8ce')} entered the premiter with QR Code linked with owner's id of {_id: ObjectId('622ad40d37376ad192ca98fe')}.
