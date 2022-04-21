@@ -2,13 +2,18 @@ const fs = require('fs')
 
 const addLogs = (type, id1, id2, ip) => {
     const logTime = new Date().toLocaleString();
-    if (type == 'server-boot'){
+    if (type == 'server-boot') {
         fs.appendFile(
             './logs/server-logs.txt',
             logTime + ': Server successfully booted.\n',
             err => { if (err) throw err; }
         )
-
+    } else if (type == 'server-database') {
+        fs.appendFile(
+            './logs/server-logs.txt',
+            logTime + ': Server successfully connected to database.\n',
+            err => { if (err) throw err; }
+        )
     } else if (type == 'web-employee-login') {
         fs.appendFile(
             './logs/employee-logs.txt',
@@ -43,6 +48,30 @@ const addLogs = (type, id1, id2, ip) => {
         fs.appendFile(
             './logs/admin-logs.txt',
             logTime + ': Admin with id of {_id: ObjectId(\'' + id1 + '\')} viewed the ' + id2 + ' logs.\n',
+            err => { if (err) throw err; }
+        )
+    } else if (type == 'web-admin-adds-admin') {
+        fs.appendFile(
+            './logs/admin-logs.txt',
+            logTime + ': Admin with id of {_id: ObjectId(\'' + id1 + '\')} added an admin with id of {_id: ObjectId(\'' + id2 + '\')}.\n',
+            err => { if (err) throw err; }
+        )
+    } else if (type == 'web-admin-adds-employee') {
+        fs.appendFile(
+            './logs/admin-logs.txt',
+            logTime + ': Admin with id of {_id: ObjectId(\'' + id1 + '\')} added an employee with id of {_id: ObjectId(\'' + id2 + '\')}.\n',
+            err => { if (err) throw err; }
+        )
+    } else if (type == 'web-admin-adds-owner') {
+        fs.appendFile(
+            './logs/admin-logs.txt',
+            logTime + ': Admin with id of {_id: ObjectId(\'' + id1 + '\')} added an owner with id of {_id: ObjectId(\'' + id2 + '\')}.\n',
+            err => { if (err) throw err; }
+        )
+    } else if (type == 'web-employee-adds-owner') {
+        fs.appendFile(
+            './logs/employee-logs.txt',
+            logTime + ': Employee with id of {_id: ObjectId(\'' + id1 + '\')} added an owner with id of {_id: ObjectId(\'' + id2 + '\')}.\n',
             err => { if (err) throw err; }
         )
     }

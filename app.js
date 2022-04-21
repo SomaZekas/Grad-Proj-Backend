@@ -12,7 +12,6 @@
  */
 const express = require('express');
 const app = express();
-//const bodyParser = require('body-parser')
 const multer = require('multer')
 // const cloudinary = require('cloudinary').v2;
 // const { CloudinaryStorage } = require('multer-storage-cloudinary');
@@ -40,7 +39,7 @@ const multer = require('multer')
 //         }
 //     } 
 // });
-
+                
 const {storage} = require('./modules/Cloudinary')
 const upload = multer({storage})
 
@@ -49,15 +48,18 @@ const NodeRSA = require('node-rsa');
 const session = require('express-session');
 const path = require('path');
 const fs = require('fs');
+//const bodyParser = require('body-parser')
 
 
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/test').then(()=> {
     console.log('Connected');
-    //logs connected to server
+    addLogs('server-database', '0', '0', '0');
+
 }).catch(err => {
     console.log('Error!');
     console.log(err);
+    
 })
 
 const mobile = require('./routes/mobile');
@@ -119,7 +121,16 @@ app.use('/owners', mobile)
 //logs server
 addLogs('server-boot', '0', '0', '0');
 
-//React testing
+//Testing
+// app.get('/keys', (req, res) => {
+//     res.json({
+//         'public': keyRSA.exportKey('public'),
+//         'private': keyRSA.exportKey('private')
+//     })
+// })
+
+
+//Web
 app.post('/sign-in', async (req, res) => {
     const {email, password} = req.body;
     if ((email != '' && password != '') && email.match(regexEmail) && email.length > 5 && password.length >= 3) {
@@ -160,65 +171,111 @@ app.post('/sign-in', async (req, res) => {
 })
 
 app.post('/add-person', async (req, res) => {
-    //test then clean
-    // console.log(req.body);
-    // console.log(req.session.user);
-    
+    const { national_id, nationality, gender, religion, name, phone, address, email, password } = req.body;
+
     const authorizedAdmin = await Admin.findById(req.session.user);
-    const authorizedEmployee = await Employee.findOne({_id:req.session.user, job_title: 'sales'});
+    const authorizedEmployee = await Employee.findOne({_id: req.session.user, job_title: 'sales'});
+
     
-    if (authorizedAdmin) {
-        if (req.body.select == 'Admin') {
-            const alreadyExists = await Admin.findOne({email: req.body.email})
-            if (alreadyExists) {
-                return res.status(200).json({
-                    'confirmation': 'failure',
-                    'message': 'Email already exists!'
-                });
-            }
+    if (national_id != '' && 
+        nationality != '' && 
+        gender != '' &&
+        religion != '' &&
+        name != '' &&
+        phone != '' &&
+        address != '' &&
+        email != '' &&
+        password != '' &&
+        email.match(regexEmail)) {
 
-            try {
-                const newAdmin = await Admin.create(req.body);
-                await authorizedAdmin.updateOne({$push: { added: newAdmin._id}})
-                await newAdmin.updateOne({ added_by_admin: authorizedAdmin._id})
+        req.body.password = sha256(password);
         
-                res.status(200).json({
-                    'confirmation': 'success',
-                });
-            } catch (error) {
-                console.log(error);
-                res.status(400).json({
-                    'confirmation': 'failure',
-                    'message': 'Try Again!'
-                });
-            }
+        if (authorizedAdmin) {
+            if (req.body.select == 'Admin') {
+                const alreadyExists = await Admin.findOne({email: req.body.email})
+                if (alreadyExists) {
+                    return res.status(200).json({
+                        'confirmation': 'failure',
+                        'message': 'Email already exists!'
+                    });
+                }
 
-        } else if (req.body.select == 'Employee') {
-            const alreadyExists = await Employee.findOne({email: req.body.email})
-            if (alreadyExists) {
-                return res.status(200).json({
-                    'confirmation': 'failure',
-                    'message': 'Email already exists!'
-                });
-            }
+                try {
+                    const newAdmin = await Admin.create(req.body);
+                    await authorizedAdmin.updateOne({$push: { added: newAdmin._id}});
+                    await newAdmin.updateOne({ added_by_admin: authorizedAdmin._id});
+            
+                    res.status(200).json({
+                        'confirmation': 'success',
+                    });
 
-            try {
-                const newEmployee = await Employee.create(req.body);
-                await authorizedAdmin.updateOne({$push: { added: newEmployee._id}})
-                await newEmployee.updateOne({ added_by_admin: authorizedAdmin._id})
-        
-                res.status(200).json({
-                    'confirmation': 'success',
-                });
-            } catch (error) {
-                console.log(error);
-                res.status(400).json({
-                    'confirmation': 'failure',
-                    'message': 'Try Again!'
-                });
-            }
+                    addLogs('web-admin-adds-admin', authorizedAdmin._id, newAdmin._id, '0');
+                } catch (error) {
+                    console.log(error);
+                    res.status(400).json({
+                        'confirmation': 'failure',
+                        'message': 'Try Again!'
+                    });
+                }
 
-        } else if (req.body.select == 'Owner') {
+            } else if (req.body.select == 'Employee') {
+                const alreadyExists = await Employee.findOne({email: req.body.email})
+                if (alreadyExists) {
+                    return res.status(200).json({
+                        'confirmation': 'failure',
+                        'message': 'Email already exists!'
+                    });
+                }
+
+                try {
+                    const newEmployee = await Employee.create(req.body);
+                    await authorizedAdmin.updateOne({$push: { added: newEmployee._id}})
+                    await newEmployee.updateOne({ added_by_admin: authorizedAdmin._id})
+            
+                    res.status(200).json({
+                        'confirmation': 'success',
+                    });
+
+                    addLogs('web-admin-adds-employee', authorizedAdmin._id, newEmployee._id, '0');
+                } catch (error) {
+                    console.log(error);
+                    res.status(400).json({
+                        'confirmation': 'failure',
+                        'message': 'Try Again!'
+                    });
+                }
+
+            } else if (req.body.select == 'Owner') {
+                const alreadyExists = await Owner.findOne({email: req.body.email})
+                if (alreadyExists) {
+                    return res.status(200).json({
+                        'confirmation': 'failure',
+                        'message': 'Email already exists!'
+                    });
+                }
+
+                try {
+                    const newOwner = await Owner.create(req.body);
+                    await authorizedAdmin.updateOne({$push: { added: newOwner._id}})
+                    await newOwner.updateOne({ added_by_employee: authorizedAdmin._id})
+            
+                    res.status(200).json({
+                        'confirmation': 'success',
+                    });
+
+                    addLogs('web-admin-adds-owner', authorizedAdmin._id, newOwner._id, '0');
+                } catch (error) {
+                    console.log(error);
+                    res.status(400).json({
+                        'confirmation': 'failure',
+                        'message': 'Try Again!'
+                    });
+                }
+
+            } else {
+                res.send('Error!')
+            }
+        } else if (authorizedEmployee) {
             const alreadyExists = await Owner.findOne({email: req.body.email})
             if (alreadyExists) {
                 return res.status(200).json({
@@ -229,12 +286,14 @@ app.post('/add-person', async (req, res) => {
 
             try {
                 const newOwner = await Owner.create(req.body);
-                await authorizedAdmin.updateOne({$push: { added: newPerson._id}})
-                await newOwner.updateOne({ added_by_employee: authorizedAdmin._id})
+                await authorizedEmployee.updateOne({$push: { added: newOwner._id}})
+                await newOwner.updateOne({ added_by_employee: authorizedEmployee._id})
         
                 res.status(200).json({
                     'confirmation': 'success',
                 });
+
+                addLogs('web-employee-adds-owner', authorizedEmployee._id, newOwner._id, '0');
             } catch (error) {
                 console.log(error);
                 res.status(400).json({
@@ -244,52 +303,22 @@ app.post('/add-person', async (req, res) => {
             }
 
         } else {
-            res.send('Error!')
-        }
-    } else if (authorizedEmployee) {
-
-        const alreadyExists = await Owner.findOne({email: req.body.email})
-        if (alreadyExists) {
-            return res.status(200).json({
+            return res.status(400).json({
                 'confirmation': 'failure',
-                'message': 'Email already exists!'
+                'message': 'Unauthorized!'
             });
         }
-        try {
-            const newOwner = await Owner.create(req.body);
-            await authorizedEmployee.updateOne({$push: { added: newOwner._id}})
-            await newOwner.updateOne({ added_by_employee: authorizedEmployee._id})
-    
-            res.status(200).json({
-                'confirmation': 'success',
-            });
-        } catch (error) {
-            console.log(error);
-            res.status(400).json({
-                'confirmation': 'failure',
-                'message': 'Try Again!'
-            });
-        }
-
     } else {
         return res.status(400).json({
             'confirmation': 'failure',
-            'message': 'Unauthorized!'
+            'message': 'Enter Valid Credentials!'
         });
-    }
-
-    //try promise
-
-    //logs owner adds guest (to be tested)
-    //addLogs('mobile-owner-add-guest', guest_owner._id, newGuest._id, '0')
-        
+    }        
     
 })
 
 app.get('/logout', (req, res) => {
-    //logs of user logged out
     req.session.destroy();
-    //res.redirect('/');
     res.end();
 })
 
@@ -306,7 +335,7 @@ app.get('/logs/:type', async (req, res) => {
                 confirmation: 'success',
                 data: guests
             })
-            //logs of admin viewed records
+
             addLogs('web-admin-logs', authorizedAdmin._id, type, '0')
         })
         .catch(err => {
@@ -329,16 +358,6 @@ app.get('/logs/:type', async (req, res) => {
 //     res.json({
 //         'confirmation': 'success',
 //         'role': 'admin'
-//     })
-// })
-
-
-
-//Testing
-// app.get('/keys', (req, res) => {
-//     res.json({
-//         'public': keyRSA.exportKey('public'),
-//         'private': keyRSA.exportKey('private')
 //     })
 // })
 
@@ -445,10 +464,14 @@ app.listen(5000, () => {
 /**
  * Web:
  * ----
- * - Authorize the view of records, logs, edit of owner's data
+ * - Authorize the view of records, edit of owner's data
  * - Session ID (expires?)
  * - Once gate opens, details of guest and data are shown in the web
  * - Owner's forgot passward, send to email
+ * - Validate input
+ * - Gate Pictures
+ * - Hardware Devices
+ * - Add 'title' data when admin adds an employee
  * Mobile:
  * -------
  * - Generate QR code
@@ -464,7 +487,6 @@ app.listen(5000, () => {
  * - server saves the image from gate with timestamp (HARDWARE)
  * - Selected image will be added in the selected guest's database (HARDWARE)
  * - Authenticate hardware (HARDWARE)
- * - Hashing passwords (WEB)
  * Hardware:
  * ---------
  * - Authenticate with server (save session id?)
@@ -472,7 +494,7 @@ app.listen(5000, () => {
  * - if gate opened, take screenshot from camera 2 and send to server.
  * Database:
  * ---------
- * - 
+ * - Add Hardware model.
  * Deployment:
  * -----------
  * - deploy

@@ -108,3 +108,34 @@
 4/15/2022, 8:25:40 AM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} viewed the guest logs.
 4/15/2022, 8:26:15 AM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} viewed the admin logs.
 4/15/2022, 8:26:21 AM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} viewed the gate-pictures logs.
+4/17/2022, 12:34:21 AM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} logged in with ip ::ffff:127.0.0.1.
+4/17/2022, 12:34:33 AM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} viewed the admin logs.
+4/17/2022, 12:35:09 AM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} viewed the gate-pictures logs.
+4/17/2022, 12:36:35 AM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} viewed the owner logs.
+4/17/2022, 12:36:58 AM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} viewed the hardware logs.
+4/17/2022, 12:37:09 AM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} viewed the guest logs.
+4/17/2022, 12:41:55 AM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} logged in with ip ::ffff:127.0.0.1.
+4/17/2022, 12:42:15 AM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} logged in with ip ::ffff:127.0.0.1.
+4/17/2022, 12:44:32 AM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} logged in with ip ::ffff:127.0.0.1.
+4/17/2022, 1:01:51 AM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} logged in with ip ::ffff:127.0.0.1.
+4/17/2022, 1:02:54 AM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} viewed the gate-pictures logs.
+4/17/2022, 1:16:18 AM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} logged in with ip ::ffff:127.0.0.1.
+4/17/2022, 1:18:38 AM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} logged in with ip ::ffff:127.0.0.1.
+4/18/2022, 12:50:04 PM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} logged in with ip ::1.
+4/18/2022, 12:50:24 PM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} viewed the admin logs.
+4/18/2022, 12:51:10 PM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} viewed the gate-pictures logs.
+4/21/2022, 3:29:11 AM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} logged in with ip ::ffff:127.0.0.1.
+4/21/2022, 3:36:55 AM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} logged in with ip ::ffff:127.0.0.1.
+4/21/2022, 3:38:50 AM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} logged in with ip ::ffff:127.0.0.1.
+4/21/2022, 3:55:21 AM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} logged in with ip ::ffff:127.0.0.1.
+4/21/2022, 3:55:38 AM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} added an admin with id of {_id: ObjectId('6260b99ac4bc591a7c5f3fd1')}.
+4/21/2022, 3:59:38 AM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} logged in with ip ::ffff:127.0.0.1.
+4/21/2022, 4:00:51 AM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} added an owner with id of {_id: ObjectId('6260bad31193dc03807a7481')}.
+4/21/2022, 4:04:25 AM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} logged in with ip ::ffff:127.0.0.1.
+4/21/2022, 4:07:08 AM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} added an owner with id of {_id: ObjectId('6260bc4c6507ea56826f47d5')}.
+4/21/2022, 4:20:27 AM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} logged in with ip ::ffff:127.0.0.1.
+4/21/2022, 4:20:51 AM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} added an owner with id of {_id: ObjectId('6260bf83bb0e200deac2fa9c')}.
+4/21/2022, 4:21:27 AM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} added an employee with id of {_id: ObjectId('6260bfa7bb0e200deac2faa6')}.
+4/21/2022, 4:23:35 AM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} logged in with ip ::ffff:127.0.0.1.
+4/21/2022, 4:24:00 AM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} added an admin with id of {_id: ObjectId('6260c040bb0e200deac2fab7')}.
+4/21/2022, 4:24:09 AM: Admin with id of {_id: ObjectId('6260c040bb0e200deac2fab7')} logged in with ip ::ffff:127.0.0.1.

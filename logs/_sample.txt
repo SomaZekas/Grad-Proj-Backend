@@ -7,7 +7,7 @@ Admin:
 Employee:
     ✅4/4/2022, 2:36:23 AM: Employee with id of ---- logged in with ip ----.
     4/4/2022, 2:36:23 AM: Employee with id of ---- entered the preimeter.
-    4/4/2022, 2:36:23 AM: Employee with id of ---- added a owner with id of ----.
+    ✅4/4/2022, 2:36:23 AM: Employee with id of ---- added a owner with id of ----.
 
 Guest:
     ✅4/4/2022, 2:36:23 AM: Guest with id of ---- entered the premiter with QR Code linked with owner's id of ----.
@@ -24,3 +24,5 @@ Owner:
 
 Server:
     ✅4/4/2022, 2:36:23 AM: Server successfully booted.
+    ✅4/4/2022, 2:36:23 AM: Server connected to database.
+    
