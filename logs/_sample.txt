@@ -14,8 +14,8 @@ Guest:
 
 Hardware:
     4/4/2022, 2:36:23 AM: Hardware with id of ---- logged in with ip ----.
-    4/4/2022, 2:36:23 AM: Hardware with id of ---- opened gate for guest with id of ----.
-    4/4/2022, 2:36:23 AM: Hardware with id of ---- sent picture of guest with id of ---- to server with link of ----.
+    ✅4/4/2022, 2:36:23 AM: Hardware with id of ---- opened gate for guest with id of ----.
+    ✅4/4/2022, 2:36:23 AM: Hardware with id of ---- sent picture of guest with id of ---- to server with link of ----.
 
 Owner:
     ✅4/4/2022, 2:36:23 AM: Owner with id of ---- logged in with ip ----.

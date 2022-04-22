@@ -12,42 +12,9 @@
  */
 const express = require('express');
 const app = express();
-const multer = require('multer')
-// const cloudinary = require('cloudinary').v2;
-// const { CloudinaryStorage } = require('multer-storage-cloudinary');
-
-// // dotenv file
-// const CLOUNDINARY_CLOUD_NAME = 'dodmtp0m2';
-// const CLOUDINARY_KEY = '872594197768919';
-// const CLOUDINARY_SECRET = 'caLYZKrjQcANYesu0IPYCt4vJJQ';
-// //put in module
-// cloudinary.config({
-//     cloud_name: CLOUNDINARY_CLOUD_NAME,
-//     api_key: CLOUDINARY_KEY,
-//     api_secret: CLOUDINARY_SECRET
-// });
-
-// const storage = new CloudinaryStorage({
-//     cloudinary,
-//     params: {
-//         folder: 'test',
-//         allowedFormats: ['jepg', 'png', 'jpg'],
-//         use_filename: true,
-//         public_id: (req, file) => {
-//             const timestamp = Date.now();
-//             return timestamp + '_' + file.originalname;
-//         }
-//     } 
-// });
-                
-const {storage} = require('./modules/Cloudinary')
-const upload = multer({storage})
-
 const sha256 = require('js-sha256').sha256;
-const NodeRSA = require('node-rsa');
 const session = require('express-session');
 const path = require('path');
-const fs = require('fs');
 //const bodyParser = require('body-parser')
 
 
@@ -62,53 +29,20 @@ mongoose.connect('mongodb://localhost:27017/test').then(()=> {
     
 })
 
+const hardware = require('./routes/hardware');
 const mobile = require('./routes/mobile');
+
+const Admin = require('./models/Admin')
+const Employee = require('./models/Employee')
+const Guest = require('./models/Guest')
+const Owner = require('./models/Owner')
 
 const addLogs = require('./modules/Log');
 
-const Owner = require('./models/Owner')
-const Guest = require('./models/Guest')
-const Employee = require('./models/Employee')
-const Admin = require('./models/Admin')
-
-
-// let keyRSA;
-// let privateKey;
-// let publicKey;
-
-// if (fs.statSync('./keys/private.pem').size == 0) {
-    
-//     keyRSA = new NodeRSA({b: 1024}).generateKeyPair();
-//     keyRSA.setOptions({encryptionScheme: 'pkcs1'});
-    
-//     privateKey = keyRSA.exportKey('private');
-//     publicKey = keyRSA.exportKey('public');
-    
-//     fs.openSync('./keys/private.pem', 'w');
-//     fs.writeFileSync('./keys/private.pem', privateKey, 'utf-8');
-    
-//     fs.openSync('./keys/public.pem', 'w');
-//     fs.writeFileSync('./keys/public.pem', publicKey, 'utf-8');
-// } else {
-//     privateKey = fs.readFileSync('./keys/private.pem', 'utf-8');
-//     publicKey = fs.readFileSync('./keys/public.pem', 'utf-8');
-//     keyRSA.importKey(privateKey, 'private')
-//     keyRSA.importKey(publicKey, 'public')
-// }
-
-const keyRSA = new NodeRSA();
-keyRSA.setOptions({encryptionScheme: 'pkcs1'});
-keyRSA.importKey(fs.readFileSync('./keys/private.pem', 'utf-8'), 'private');
-keyRSA.importKey(fs.readFileSync('./keys/public.pem', 'utf-8'), 'public');
-
-// keyRSA.importKey(privKey, 'private')
-// keyRSA.importKey(pubKey, 'public')
-//console.log(keyRSA.getKeySize());
-//console.log(keyRSA.getMaxMessageSize());
-// console.log(keyRSA.exportKey('private'));
-// console.log(keyRSA.exportKey('public'));
-
 const regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+//logs server
+addLogs('server-boot', '0', '0', '0');
 
 //app.use(express.static('./public'))
 app.use(express.static('./public/build'))
@@ -117,9 +51,8 @@ app.use(express.json())
 app.use(session({ secret: '^kk#o@OZ332o06^4' }))
 
 app.use('/owners', mobile)
+app.use('/gate', hardware)
 
-//logs server
-addLogs('server-boot', '0', '0', '0');
 
 //Testing
 // app.get('/keys', (req, res) => {
@@ -353,110 +286,6 @@ app.get('/logs/:type', async (req, res) => {
 })
 
 
-// app.get('/verify-role-react', (req, res) => {
-//     console.log(req.body);
-//     res.json({
-//         'confirmation': 'success',
-//         'role': 'admin'
-//     })
-// })
-
-//Web
-// app.post('/sign-in', async (req, res) => {
-//     const {email, password} = req.body;
-//     console.log(email, password);
-//     if ((email != '' && password != '') && email.match(regexEmail) && email.length > 5 && password.length >= 3) {
-//         const isValidEmployee = await Employee.findOne({email});
-//         const isValidAdmin = await Admin.findOne({email});
-//         const ip = req.ip
-//         // const ip = req.headers['x-forwaded-for']
-//         // const ip = req.socket.remoteAddress;
-//         // console.log(ip);
-//         if (isValidEmployee && sha256(password) == isValidEmployee.password) {
-//             req.session.user = isValidEmployee._id;
-//             addLogs('web-employee-login', isValidEmployee._id, '0', ip);
-//             return res.status(200).redirect('/');
-//             // return res.status(200).json({
-//             //     'confirmation': 'success',
-//             //     'name': isValidEmployee.name.charAt(0).toUpperCase() + isValidEmployee.name.slice(1)
-//             // });
-//         } else if (isValidAdmin && sha256(password) == isValidAdmin.password) {
-//             req.session.user =  isValidAdmin._id;
-//             addLogs('web-admin-login', isValidAdmin._id, '0', ip);
-//             return res.status(200).redirect('/');
-//         } else {
-//             return res.status(401).json({
-//                 'confirmation': 'failure',
-//                 'message': 'Wrong Credentials.'
-//             });
-//         }
-//     } else {
-//         return res.status(401).json({
-//             'confirmation': 'failure',
-//             'message': 'Enter valid credentials.'
-//         });
-//     }
-
-// })
-
-// app.get('/sign-up.html', async (req, res) => {
-//     //console.log('sign in');
-//     const validSessionAdmin = await Admin.findById(req.session.user);
-//     const validSessionEmployee = await Employee.findById(req.session.user)
-//     if (validSessionAdmin) {
-//         res.sendFile(path.resolve(__dirname, './private/sign-up-admin.html'));
-        
-//     } else if (validSessionEmployee) {
-//         res.sendFile(path.resolve(__dirname, './private/sign-up.html'));
-
-//     } else {
-//         res.redirect('/sign-in.html')
-//     }
-// })
-
-// app.get('/logs.html', async (req, res) => {
-//     const validSessionAdmin = await Admin.findById(req.session.user);
-//     if (validSessionAdmin) {
-//         res.sendFile(path.resolve(__dirname, './private/logs.html'));
-//         //logs of admin
-//     } else {
-//         res.send('unauthorized');
-//     }
-// })
-
-
-
-
-
-//Hardware
-var qrValid;
-app.post('/gate', async (req, res) => {
-    const {data} = req.body;
-    const decryptedHash = keyRSA.decrypt(data, 'utf-8');
-    qrValid = await Guest.findOne({hashed: decryptedHash, used: false});
-    if (qrValid) {
-        await qrValid.updateOne({used: true});
-        //logs guest entered
-        addLogs('hardware-guest', qrValid._id, qrValid.owner_id, '0')
-        //logs gate opened for guest ----
-        return res.send('Confirmed');
-    } else {    
-        return res.send('Failed');
-    }
-    
-})
-
-app.post('/gate/image', upload.single('file'), async (req, res) => {
-    //add a way to verify before adding picture
-    const {path, filename} = req.file;
-    const uploadTime = new Date().toLocaleString();
-    await qrValid.updateOne({ entrance_img: {url: path, filename: filename, dateUploaded: uploadTime} });
-    //logs hardware sent picture
-    res.send('Done');
-
-    //Saves images in cloudinary
-})
-
 app.listen(5000, () => {
     console.log('Server is listening on port 5000...');
 })
@@ -483,15 +312,17 @@ app.listen(5000, () => {
  * - Owner generates his own qr to enter
  * Server:
  * -------
- * - Logging every action (ALL) (Hardware)
- * - server saves the image from gate with timestamp (HARDWARE)
- * - Selected image will be added in the selected guest's database (HARDWARE)
+ * - Logging every action (ALL)
+ * - server saves the image from gate with timestamp (done in name) (HARDWARE)
  * - Authenticate hardware (HARDWARE)
  * Hardware:
  * ---------
  * - Authenticate with server (save session id?)
- * - read response from server, if confirmed then open gate, and save image from camera 2?
- * - if gate opened, take screenshot from camera 2 and send to server.
+ * - try and catch to handle server down issues in requests.
+ * - try and catch to hide errors.
+ * - test with rest of components.
+ * - script runs once booted.
+ * - link all and finish.
  * Database:
  * ---------
  * - Add Hardware model.

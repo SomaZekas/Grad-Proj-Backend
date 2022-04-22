@@ -20,7 +20,8 @@ const storage = new CloudinaryStorage({
         use_filename: true,
         public_id: (req, file) => {
             const timestamp = Date.now();
-            return timestamp + '_' + file.originalname;
+            const name = file.originalname.replace('.jpg', '')
+            return timestamp + '_' + name;
         }
     } 
 });
