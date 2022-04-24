@@ -317,7 +317,7 @@ app.listen(5000, () => {
  * - Authenticate hardware (HARDWARE)
  * Hardware:
  * ---------
- * - Authenticate with server (save session id?)
+ * - Authenticate with server
  * - try and catch to handle server down issues in requests.
  * - try and catch to hide errors.
  * - test with rest of components.
