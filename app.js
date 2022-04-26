@@ -38,6 +38,7 @@ const Guest = require('./models/Guest')
 const Owner = require('./models/Owner')
 
 const addLogs = require('./modules/Log');
+const Hardware = require('./models/Hardware');
 
 const regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
@@ -285,6 +286,31 @@ app.get('/logs/:type', async (req, res) => {
     }
 })
 
+app.get('/devices', async (req, res) => {
+    const authorizedAdmin = await Admin.findById(req.session.user);
+    if (authorizedAdmin) {
+        Hardware.find()
+        .then(hardwares => {
+            res.json({
+                confirmation: 'success',
+                data: hardwares
+            })
+
+            //addLogs('web-admin-logs', authorizedAdmin._id, type, '0')
+        })
+        .catch(err => {
+            res.json({
+                'confirmation': 'failure',
+                'message': err.message
+            })
+        })
+    } else {
+        res.status(401).json({
+            'confirmation': 'failure',
+            'message': 'Unauthorized!'
+        });
+    }
+})
 
 app.listen(5000, () => {
     console.log('Server is listening on port 5000...');
@@ -315,6 +341,8 @@ app.listen(5000, () => {
  * - Logging every action (ALL)
  * - server saves the image from gate with timestamp (done in name) (HARDWARE)
  * - Authenticate hardware (HARDWARE)
+ * - Add date during qr code creation
+ * - Check QR Code date 24 hrs max
  * Hardware:
  * ---------
  * - Authenticate with server
