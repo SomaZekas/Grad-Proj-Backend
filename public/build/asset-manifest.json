@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "/static/css/main.573a6d60.css",
-    "main.js": "/static/js/main.272a4c12.js",
+    "main.css": "/static/css/main.a62532e3.css",
+    "main.js": "/static/js/main.d38bd3a8.js",
     "static/js/787.e8b092fc.chunk.js": "/static/js/787.e8b092fc.chunk.js",
     "static/media/Security-Gates-shade.jpg": "/static/media/Security-Gates-shade.a9f51ffe8c730a6ca6b1.jpg",
     "static/media/Security-Gates.jpg": "/static/media/Security-Gates.8fc874e2c5a95e414d01.jpg",
     "static/media/SecureGate-logos_white.png": "/static/media/SecureGate-logos_white.b68cac14594691b1e5e3.png",
     "static/media/SecureGate-logos_black.png": "/static/media/SecureGate-logos_black.5b0d0595164fc873cf9f.png",
     "index.html": "/index.html",
-    "main.573a6d60.css.map": "/static/css/main.573a6d60.css.map",
-    "main.272a4c12.js.map": "/static/js/main.272a4c12.js.map",
+    "main.a62532e3.css.map": "/static/css/main.a62532e3.css.map",
+    "main.d38bd3a8.js.map": "/static/js/main.d38bd3a8.js.map",
     "787.e8b092fc.chunk.js.map": "/static/js/787.e8b092fc.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.573a6d60.css",
-    "static/js/main.272a4c12.js"
+    "static/css/main.a62532e3.css",
+    "static/js/main.d38bd3a8.js"
   ]
 }
