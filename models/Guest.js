@@ -7,6 +7,8 @@ const Guest = new mongoose.Schema({
     used: {type: Boolean, trim: true, default: false},
     hashed: {type: String, trim: true, default:''},
     owner_id: {type: mongoose.Types.ObjectId, trim: true},
+    owner_name: {type: String, trim: true, default:''},
+    owner_address: {type: String, trim: true, default:''},
     entrance_img: {
         url: {type: String, trim: true, default: ''},
         filename: {type: String, trim: true, default: ''},

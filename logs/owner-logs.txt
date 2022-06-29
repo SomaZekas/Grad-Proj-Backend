@@ -24,3 +24,69 @@
 5/14/2022, 4:14:01 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} added a guest with id of {_id: ObjectId('627f10696d52fbe7c45393ac')} and generated a QR Code.
 5/14/2022, 4:19:45 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.136.248.
 5/14/2022, 4:20:49 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} added a guest with id of {_id: ObjectId('627f12016d52fbe7c45393b2')} and generated a QR Code.
+6/7/2022, 6:21:19 PM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.1.27.
+6/7/2022, 6:21:31 PM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.1.27.
+6/7/2022, 6:22:58 PM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.1.27.
+6/7/2022, 6:23:16 PM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} added a guest with id of {_id: ObjectId('629f7b74d6edef0d353ff7db')} and generated a QR Code.
+6/26/2022, 11:50:47 PM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/26/2022, 11:56:11 PM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/26/2022, 11:56:56 PM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:00:01 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:00:48 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:03:32 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:05:36 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:10:06 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:15:40 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:16:44 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:18:11 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:22:35 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:23:40 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:25:00 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:25:59 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:26:24 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:27:20 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:27:38 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:28:49 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:30:29 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:31:59 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:34:24 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:34:50 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:35:48 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:36:07 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:37:14 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:38:05 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:44:38 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:45:10 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} added a guest with id of {_id: ObjectId('62b8e1766ac26156cffbdcdc')} and generated a QR Code.
+6/27/2022, 12:45:44 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} added a guest with id of {_id: ObjectId('62b8e1986ac26156cffbdce1')} and generated a QR Code.
+6/27/2022, 12:45:56 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} added a guest with id of {_id: ObjectId('62b8e1a46ac26156cffbdce6')} and generated a QR Code.
+6/27/2022, 12:46:27 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:46:46 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} added a guest with id of {_id: ObjectId('62b8e1d66ac26156cffbdcec')} and generated a QR Code.
+6/27/2022, 12:47:39 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:50:34 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:55:29 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:57:04 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:58:01 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 12:58:21 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 1:12:56 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 1:13:53 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 1:14:11 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 1:19:29 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 1:25:14 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 1:25:53 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 1:26:51 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 1:32:39 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 1:36:02 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 1:38:18 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 1:39:36 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.6.1.
+6/27/2022, 1:39:50 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} added a guest with id of {_id: ObjectId('62b8ee466ac26156cffbdd0d')} and generated a QR Code.
+6/29/2022, 10:49:11 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.3.34.
+6/29/2022, 10:58:40 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.3.34.
+6/29/2022, 11:00:12 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.3.34.
+6/29/2022, 11:01:21 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.3.34.
+6/29/2022, 11:03:07 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.3.34.
+6/29/2022, 11:05:05 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.3.34.
+6/29/2022, 11:08:15 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.3.34.
+6/29/2022, 11:08:32 AM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} added a guest with id of {_id: ObjectId('62bc169034e1734e880bc108')} and generated a QR Code.
+6/29/2022, 12:46:17 PM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} logged in with ip ::ffff:192.168.3.34.
+6/29/2022, 12:46:36 PM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} added a guest with id of {_id: ObjectId('62bc2d8c698d54dcba1df904')} and generated a QR Code.
+6/29/2022, 1:15:40 PM: Owner with id of {_id: ObjectId('622ad40d37376ad192ca98fe')} added a guest with id of {_id: ObjectId('62bc345ceb603dfa1c73bab1')} and generated a QR Code.

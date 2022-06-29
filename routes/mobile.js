@@ -15,6 +15,7 @@ const regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 //Login
 router.post('/', async (req, res) => {
+    console.log(req.body);
     const {from} = req.body; //Takes important variables from request body.
     const ip = req.ip; //Gets IP from the request.
     if (from == 'Mobile') { //Checks if request from mobile.
@@ -50,9 +51,9 @@ router.post('/', async (req, res) => {
 
 //Owner adds a new guest
 router.post('/newguest', async (req, res) => {
+    console.log(req.body)
     const {from, ownerEmail, ownerPassword, name, date, car_id} = req.body; //Takes important variables from request body.
     if (from == 'Mobile') { //Checks if request from mobile.
-        
         //const {name, date, car_id, hashed} = req.body;
         //Date regex?
         //const regexDate = [0-3][0-9]-[01][1-9]-[0-9][0-9][0-9][0-9]; //to be checked
@@ -68,6 +69,8 @@ router.post('/newguest', async (req, res) => {
                 //Linking both id in database.
                 await validOwner.updateOne({ $push: { active_qr: newGuest._id }});
                 await newGuest.updateOne({owner_id: validOwner._id});
+                await newGuest.updateOne({owner_name: validOwner.name});
+                await newGuest.updateOne({owner_address: validOwner.address});
 
                 addLogs('mobile-owner-add-guest', validOwner._id, newGuest._id, '0');
                 

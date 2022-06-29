@@ -17,12 +17,16 @@ const addLogs = require('../modules/Log');
 
 var qrValid;
 router.post('/', async (req, res) => {
+    console.log(req.body);
     const {Device_id, password, data} = req.body;
     const validHardware = await Hardware.findOne({Device_id: Device_id, password: password});
     if (validHardware) {
         const decryptedHash = keyRSA.decrypt(data, 'utf-8');
         qrValid = await Guest.findOne({hashed: decryptedHash, used: false});
-        if (qrValid) {
+        const dateCurrent = new Date().toLocaleDateString();
+        const dateDB = new Date(qrValid.date).toLocaleDateString();
+        console.log(dateDB + ' ///// ' + dateCurrent);
+        if (qrValid && (dateDB < dateCurrent || dateDB == dateCurrent)) {
             await qrValid.updateOne({used: true});
             await validHardware.updateOne({no_of_guests_opened: validHardware.no_of_guests_opened + 1});
             //logs guest entered

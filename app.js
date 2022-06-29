@@ -20,10 +20,13 @@ const path = require('path');
 
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/test').then(()=> {
+    //If Connected
     console.log('Connected');
+    // Adds in logs that the server is connected to the database.
     addLogs('server-database', '0', '0', '0');
 
 }).catch(err => {
+    // If did not connect.
     console.log('Error!');
     console.log(err);
     
@@ -263,8 +266,7 @@ app.get('/logs/:type', async (req, res) => {
         res.sendFile(path.resolve(__dirname, './logs/' + type + '-logs.txt'));
         addLogs('web-admin-logs', authorizedAdmin._id, type, '0')
     } else if (authorizedAdmin && type == 'gate-pictures') {
-        Guest.find().select('entrance_img')
-        .then(guests => {
+        Guest.find().then(guests => {
             res.json({
                 confirmation: 'success',
                 data: guests
