@@ -3591,3 +3591,7 @@
 6/29/2022, 1:09:09 PM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} viewed the gate-pictures logs.
 6/29/2022, 1:11:40 PM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} logged in with ip ::ffff:192.168.3.34.
 6/29/2022, 1:11:44 PM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} viewed the gate-pictures logs.
+7/5/2022, 12:43:55 PM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} logged in with ip ::1.
+7/5/2022, 12:44:02 PM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} viewed the gate-pictures logs.
+7/5/2022, 1:09:24 PM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} logged in with ip ::ffff:192.168.232.196.
+7/5/2022, 1:09:32 PM: Admin with id of {_id: ObjectId('6237d80e7b29c1c843e95933')} viewed the owner logs.

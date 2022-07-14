@@ -4,6 +4,8 @@ const router = express.Router();
 const multer = require('multer')
 const {storage} = require('../modules/Cloudinary')
 const upload = multer({storage})
+const sha256 = require('js-sha256').sha256;
+
 
 //Importing RSA functions.
 const keyRSA = require('../modules/Keys');
@@ -17,15 +19,15 @@ const addLogs = require('../modules/Log');
 
 var qrValid;
 router.post('/', async (req, res) => {
-    console.log(req.body);
+    //console.log(req.body);
     const {Device_id, password, data} = req.body;
-    const validHardware = await Hardware.findOne({Device_id: Device_id, password: password});
+    const validHardware = await Hardware.findOne({Device_id: Device_id, password: sha256(password)});
     if (validHardware) {
         const decryptedHash = keyRSA.decrypt(data, 'utf-8');
         qrValid = await Guest.findOne({hashed: decryptedHash, used: false});
         const dateCurrent = new Date().toLocaleDateString();
         const dateDB = new Date(qrValid.date).toLocaleDateString();
-        console.log(dateDB + ' ///// ' + dateCurrent);
+        //console.log(dateDB + ' ///// ' + dateCurrent);
         if (qrValid && (dateDB < dateCurrent || dateDB == dateCurrent)) {
             await qrValid.updateOne({used: true});
             await validHardware.updateOne({no_of_guests_opened: validHardware.no_of_guests_opened + 1});

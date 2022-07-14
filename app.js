@@ -266,7 +266,7 @@ app.get('/logs/:type', async (req, res) => {
         res.sendFile(path.resolve(__dirname, './logs/' + type + '-logs.txt'));
         addLogs('web-admin-logs', authorizedAdmin._id, type, '0')
     } else if (authorizedAdmin && type == 'gate-pictures') {
-        Guest.find().then(guests => {
+        Guest.find({used: true}).then(guests => {
             res.json({
                 confirmation: 'success',
                 data: guests

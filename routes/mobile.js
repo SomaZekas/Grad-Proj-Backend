@@ -15,7 +15,7 @@ const regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 //Login
 router.post('/', async (req, res) => {
-    console.log(req.body);
+    //console.log(req.body);
     const {from} = req.body; //Takes important variables from request body.
     const ip = req.ip; //Gets IP from the request.
     if (from == 'Mobile') { //Checks if request from mobile.
@@ -51,14 +51,9 @@ router.post('/', async (req, res) => {
 
 //Owner adds a new guest
 router.post('/newguest', async (req, res) => {
-    console.log(req.body)
+    //console.log(req.body)
     const {from, ownerEmail, ownerPassword, name, date, car_id} = req.body; //Takes important variables from request body.
     if (from == 'Mobile') { //Checks if request from mobile.
-        //const {name, date, car_id, hashed} = req.body;
-        //Date regex?
-        //const regexDate = [0-3][0-9]-[01][1-9]-[0-9][0-9][0-9][0-9]; //to be checked
-        //Car plate regex?
-        //console.log(date);
 
         //Checks if credentials were valid, if not will return undefined.
         const validOwner = await Owner.findOne({email: ownerEmail, password: sha256(ownerPassword)});
